@@ -8,13 +8,17 @@ import classnames from 'classnames'
 import { Badge, Button, Text } from "@radix-ui/themes"
 import { MdDashboardCustomize } from "react-icons/md"
 import { VscIssueDraft } from "react-icons/vsc"
+import { AiOutlineUser } from "react-icons/ai"
+
 
 const NavBar = () => {
 
     const currentPath = usePathname()
     const links = [
         {label: 'dashboard', href: '/dashboard', icon: <MdDashboardCustomize />},
-        {label: 'issues', href: '/issues', icon: <VscIssueDraft />}
+        {label: 'issues', href: '/issues', icon: <VscIssueDraft />},
+        
+        {label: 'user', href: '/profile', icon: <AiOutlineUser />}
     ]
 
     
