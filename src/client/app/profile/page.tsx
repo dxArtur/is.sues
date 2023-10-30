@@ -60,9 +60,9 @@ const profilePage =()=>{
                     </>}
                 </Button>
                 <Separator  color="red"/>
-                <div className="items-center flex text-zinc-500 space-x-2">
+                <Text as='div' className="items-center flex text-zinc-500 ">
                     <RiTeamLine />is a member of departament {sessionUser.idDepartament}
-                </div>
+                </Text>
                 <Button>Send me a email</Button>
             </div>
         </div>
