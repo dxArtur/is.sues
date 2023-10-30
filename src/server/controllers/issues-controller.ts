@@ -10,7 +10,7 @@ export default class UserController{
 
         const idIssue = shortId.generate()
 
-        const {title, description} = issue
+        const {title, description, labelIds} = issue
         const createdAt = new Date()
         
 
@@ -18,10 +18,28 @@ export default class UserController{
         
         this.issues.push(issue)
     }
-    
-    updateIssue(req: Request, res: Response) {}
 
-    deleteIssue(req: Request, res: Response) {}
+    getAllIssues() {
+        return this.issues
+    }
+    
+    updateIssue(issueId: string, updatedIssue: Issue) {
+
+        const issueIndex =this.issues.findIndex(issue=> issueId === issue.id)
+
+        if (issueIndex !== -1) {
+           const {title, description, labelIds} = updatedIssue
+           this.issues[issueIndex] = {...this.issues[issueIndex]}
+
+           return this.issues[issueIndex]
+        } else {
+            return null
+        }
+    }
+
+    deleteIssue(indexIssueToRemove: string) {
+        return this.issues.splice(indexIssueToRemove, 1)
+    }
     
     viewIssue(req: Request, res: Response) {}
 }

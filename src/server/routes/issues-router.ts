@@ -13,4 +13,10 @@ router.post('/new', (req: Request, res: Response)=>{
     res.status(201).send('issue add')
 })
 
+router.get('/issues/allIssues', (req: Request, res: Response)=>{
+    const data =issuesController.getAllIssues()
+    
+    res.status(201).send(data)
+})
+
 export default router
