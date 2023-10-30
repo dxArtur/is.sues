@@ -23,9 +23,23 @@ export default class UserController{
         return this.issues
     }
     
-    updateIssue(req: Request, res: Response) {}
+    updateIssue(issueId: string, updatedIssue: Issue) {
 
-    deleteIssue(req: Request, res: Response) {}
+        const issueIndex =this.issues.findIndex(issue=> issueId === issue.id)
+
+        if (issueIndex !== -1) {
+           const {title, description, labelIds} = updatedIssue
+           this.issues[issueIndex] = {...this.issues[issueIndex]}
+
+           return this.issues[issueIndex]
+        } else {
+            return null
+        }
+    }
+
+    deleteIssue(indexIssueToRemove: string) {
+        return this.issues.splice(indexIssueToRemove, 1)
+    }
     
     viewIssue(req: Request, res: Response) {}
 }
