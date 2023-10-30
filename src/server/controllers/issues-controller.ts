@@ -10,13 +10,17 @@ export default class UserController{
 
         const idIssue = shortId.generate()
 
-        const {title, description} = issue
+        const {title, description, labelIds} = issue
         const createdAt = new Date()
         
 
 
         
         this.issues.push(issue)
+    }
+
+    getAllIssues() {
+        return this.issues
     }
     
     updateIssue(req: Request, res: Response) {}
