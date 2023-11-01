@@ -28,9 +28,9 @@ export default {
             })
 
             res.status(201).json({message: 'issue add with sucessfull', content: issueAdd})
+            
         } catch (error) {
-            console.log(error)
-            res.status(500).json({error: 'error'})
+            res.status(500).json({error: error})
         }
     },
     async getIssue(req: Request, res: Response){
@@ -46,10 +46,11 @@ export default {
             if (!issueFound) {
                 res.status(404).json({message: 'issue not found'})
             }
+
             res.status(201).json({message: 'issue found', content: issueFound})
+
         } catch (error) {
-            console.log(error)
-            res.status(500).json({error: 'error'})
+            res.status(500).json({error: error})
         }
     },
     
@@ -80,10 +81,12 @@ export default {
             if (!issueFound) {
                 res.status(404).json({message: 'issue not found'})
             }
+
             res.status(201).json({message: 'issue updated', content: issueFound})
+
         } catch (error) {
             console.log(error)
-            res.status(500).json({error: 'error'})
+            res.status(500).json({error: error})
         }
     },
 
@@ -100,10 +103,26 @@ export default {
             if (!issueFound) {
                 res.status(404).json({message: 'issue not found'})
             }
+
             res.status(201).json({message: 'issue deleted', content: issueFound})
+
         } catch (error) {
-            console.log(error)
-            res.status(500).json({error: 'error'})
+            res.status(500).json({error: error})
+        }
+    },
+
+    async getAllIssues(req: Request, res:Response) {
+        try {
+            const allIssues = await prisma.issue.findMany()
+
+            if (!allIssues) {
+                res.status(404).json({message: 'not be issues record'})
+            }
+
+            res.status(201).json({message: 'all issues', content: allIssues})
+
+        } catch (error) {
+            res.status(500).json({error: error})
         }
     }
 }
