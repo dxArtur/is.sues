@@ -80,7 +80,7 @@ export default {
             if (!issueFound) {
                 res.status(404).json({message: 'issue not found'})
             }
-            res.status(201).json({message: 'issue deleted', content: issueFound})
+            res.status(201).json({message: 'issue updated', content: issueFound})
         } catch (error) {
             console.log(error)
             res.status(500).json({error: 'error'})
@@ -106,5 +106,4 @@ export default {
             res.status(500).json({error: 'error'})
         }
     }
-
 }

@@ -8,4 +8,10 @@ const router = Router()
 
 router.post('/issues/new', controller.addIssue)
 
+router.get('/issues/allIssues', (req: Request, res: Response)=>{
+    const data =issuesController.getAllIssues()
+    
+    res.status(201).send(data)
+})
+
 export default router
