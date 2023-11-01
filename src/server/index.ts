@@ -10,7 +10,7 @@ app.use(express.json())
 app.use(bodyParser.json())
 
 
-app.use('/', routes)
+app.use('/api', routes)
 
 app.listen(3030, () =>{
   console.log('server running on port 3333')

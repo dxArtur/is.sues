@@ -1,27 +1,110 @@
 import {Request,Response} from 'express'
 import Issue from '../models/issue-interface'
 import uuidv4 from 'uuidv4'
-import shortId from 'shortid'
+import { prisma } from '../database'
 
-export default class UserController{
-    issues: Issue[] =[]
+
+
+
+export default {
+    async addIssue(req: Request, res: Response) {
+        try {
+            const {title, description, departament, labelsId, authorId} = req.body
+            
+            const issueAdd = await prisma.issue.create({
+                data: {
+                    title,
+                    description,
+                    departament,
+                    labelsId: {
+                        set: labelsId
+                    },
+                    author: {
+                        connect: {
+                            id: authorId
+                        }
+                    }
+                },
+            })
+
+            res.status(201).json({message: 'issue add with sucessfull', content: issueAdd})
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({error: 'error'})
+        }
+    },
+    async getIssue(req: Request, res: Response){
+        try {
+            const {issueId} = req.body
+
+            const issueFound = await prisma.issue.findUnique({
+                where: {
+                    id: issueId
+                }
+            })
+
+            if (!issueFound) {
+                res.status(404).json({message: 'issue not found'})
+            }
+            res.status(201).json({message: 'issue found', content: issueFound})
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({error: 'error'})
+        }
+    },
     
-    addIssue(issue: Issue) {
+    async updateIssue(req: Request, res: Response) {
+        try {
+            const {issueId} = req.body
+            const {title, description, departament, labelsId, authorId} = req.body
 
-        const idIssue = shortId.generate()
+            const issueFound = await prisma.issue.update({
+                where: {
+                    id: issueId
+                },
+                data: {
+                   title,
+                   description,
+                   departament,
+                   labelsId: {
+                    set: labelsId
+                },
+                author: {
+                    connect: {
+                        id: authorId
+                    }
+                }
+                }
+            })
 
-        const {title, description} = issue
-        const createdAt = new Date()
-        
+            if (!issueFound) {
+                res.status(404).json({message: 'issue not found'})
+            }
+            res.status(201).json({message: 'issue deleted', content: issueFound})
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({error: 'error'})
+        }
+    },
 
+    async deleteIssue(req: Request, res: Response){
+        try {
+            const {issueId} = req.body
 
-        
-        this.issues.push(issue)
+            const issueFound = await prisma.issue.delete({
+                where: {
+                    id: issueId
+                }
+            })
+
+            if (!issueFound) {
+                res.status(404).json({message: 'issue not found'})
+            }
+            res.status(201).json({message: 'issue deleted', content: issueFound})
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({error: 'error'})
+        }
     }
-    
-    updateIssue(req: Request, res: Response) {}
 
-    deleteIssue(req: Request, res: Response) {}
-    
-    viewIssue(req: Request, res: Response) {}
 }
