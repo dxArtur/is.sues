@@ -50,6 +50,7 @@ model Department {
 model Company {
   id          String       @id @default(uuid())
   name        String
+  description String?
   departments Department[]
   @@map("companies")
 }

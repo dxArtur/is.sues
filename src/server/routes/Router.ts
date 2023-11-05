@@ -3,10 +3,11 @@ import userRouter from './users-routes'
 import issueRouter from './issues-router'
 import seedRoutes from './seed-route-label'
 import departamentRoutes from './department-routes'
-
+import companyRoutes from './company-routes';
 
 const router = Router()
 
+router.use('/', companyRoutes)
 router.use('/', userRouter)
 router.use('/', issueRouter)
 router.use('/', seedRoutes)
