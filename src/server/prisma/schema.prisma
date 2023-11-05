@@ -14,8 +14,8 @@ model User {
   id           String      @id @default(uuid())
   name         String
   email        String      @unique
-  departmentId String      // Chave estrangeira para Departamento
-  department   Department  @relation(fields: [departmentId], references: [id])
+  departmentId String?
+  department   Department? @relation(fields: [departmentId], references: [id])
   issues       Issue[]
   @@map("users")
 }
@@ -30,6 +30,8 @@ model Issue {
   labelsId Int[]
   status Boolean @default(false)
   author User @relation(fields: [authorId], references: [id])
+  departmentId String
+  department   Department @relation(fields: [departmentId], references: [id])
   authorId String
   @@map("issues")
   
@@ -40,6 +42,7 @@ model Department {
   name      String
   companyId String  // Chave estrangeira para Empresa
   company   Company @relation(fields: [companyId], references: [id])
+  issues   Issue[]
   users     User[]
   @@map("departments")
 }
