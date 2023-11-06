@@ -12,8 +12,12 @@ datasource db {
 
 model User {
   id String @id @default(uuid())
-  issues Issue[]
-
+  name String
+  email String @unique
+  idDepartamento Int
+  occupation String
+  photo String
+  issues Issue[] 
   @@map("users")
 }
 
