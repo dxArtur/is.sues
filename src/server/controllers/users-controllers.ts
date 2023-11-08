@@ -1,26 +1,32 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import utilsCrypt from '../utils/crypt'
 
 const prisma = new PrismaClient();
 
 export default {
   async createUser(req: Request, res: Response) {
     try {
-      const { name, email, idDepartamento, occupation, photo } = req.body;
+      const { name, email, password, departmentId, occupation, adm, photo } = req.body;
+
+      const hashedPassword = await utilsCrypt.cryptPass(password)
+      console.log(hashedPassword)
 
       const newUser = await prisma.user.create({
         data: {
           name,
           email,
-          idDepartamento,
+          password: hashedPassword,
+          departmentId,
           occupation,
+          adm,
           photo,
         },
       });
 
       res.status(201).json({ message: 'User created successfully', content: newUser });
     } catch (error) {
-      res.status(500).json({ error: error });
+      console.log(error)
     }
   },
 
@@ -61,7 +67,9 @@ export default {
   async updateUserById(req: Request, res: Response) {
     try {
       const userId = req.params.id;
-      const { name, email, idDepartamento, occupation, photo } = req.body;
+      const { name, email, password, departmentId, occupation, adm, photo } = req.body
+
+      const hashedPassword = hashPassword(password)
 
       const updatedUser = await prisma.user.update({
         where: {
@@ -70,8 +78,10 @@ export default {
         data: {
           name,
           email,
-          idDepartamento,
+          password: hashedPassword,
+          departmentId,
           occupation,
+          adm,
           photo,
         },
       });
@@ -105,4 +115,30 @@ export default {
       res.status(500).json({ error: error });
     }
   },
+
+  async signin(req: Request, res: Response) {
+    try {
+      const {email, password} = req.body
+      const userTryLogin = await prisma.user.findFirstOrThrow({
+        where: {
+          email: email,
+        }
+      })
+
+      if ( !userTryLogin ) {
+        res.status(404).json({ message: 'User not found' }); 
+      }
+
+      const matchKeys = match(password, userTryLogin.password)
+
+      if( ! matchKeys ) {
+        res.status(500).json({ message: 'keys not match' });
+      }
+
+
+
+    } catch (error) {
+      throw new Error ('error during signin')
+    }
+  }
 };
