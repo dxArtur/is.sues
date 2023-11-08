@@ -69,7 +69,7 @@ export default {
       const userId = req.params.id;
       const { name, email, password, departmentId, occupation, adm, photo } = req.body
 
-      const hashedPassword = hashPassword(password)
+      const hashedPassword = await utilsCrypt.cryptPass(password)
 
       const updatedUser = await prisma.user.update({
         where: {
@@ -129,7 +129,7 @@ export default {
         res.status(404).json({ message: 'User not found' }); 
       }
 
-      const matchKeys = match(password, userTryLogin.password)
+      const matchKeys = await utilsCrypt.match(password, userTryLogin.password)
 
       if( ! matchKeys ) {
         res.status(500).json({ message: 'keys not match' });
