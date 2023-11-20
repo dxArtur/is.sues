@@ -18,3 +18,4 @@ router.put('/users/:id', updateUserById);
 router.delete('/users/:id', deleteUserById);
 
 export default router;
+
