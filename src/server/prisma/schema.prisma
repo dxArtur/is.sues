@@ -14,6 +14,10 @@ model User {
   id           String      @id @default(uuid())
   name         String
   email        String      @unique
+  password String
+  occupation String
+  adm Boolean
+  photo String
   departmentId String?
   department   Department? @relation(fields: [departmentId], references: [id])
   issues       Issue[]
@@ -24,15 +28,14 @@ model Issue {
   id String @id @default(uuid())
   title String
   description String
-  departament Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  labelsId Int[]
   status Boolean @default(false)
+  labelsId Int[]
   author User @relation(fields: [authorId], references: [id])
-  departmentId String
-  department   Department @relation(fields: [departmentId], references: [id])
   authorId String
+  department   Department @relation(fields: [departmentId], references: [id])
+  departmentId String
   @@map("issues")
   
 }
@@ -40,9 +43,10 @@ model Issue {
 model Department {
   id        String  @id @default(uuid())
   name      String
-  companyId String  // Chave estrangeira para Empresa
   company   Company @relation(fields: [companyId], references: [id])
+  companyId String  // Chave estrangeira para Empresa
   issues   Issue[]
+  labels Label[]
   users     User[]
   @@map("departments")
 }
@@ -50,7 +54,18 @@ model Department {
 model Company {
   id          String       @id @default(uuid())
   name        String
+  email String @unique
+  password String
   description String?
   departments Department[]
   @@map("companies")
+}
+
+model Label{
+  id Int @id @default(autoincrement())
+  name String
+  description String
+  department   Department @relation(fields: [departmentId], references: [id])
+  departmentId String
+  @@map("labels")
 }

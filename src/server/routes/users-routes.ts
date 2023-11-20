@@ -1,21 +1,21 @@
 import { Router } from 'express';
-import { createUser, listUsers, getUserById, updateUserById, deleteUserById } from '../controllers/users-controllers'; 
+import controller from '../controllers/users-controllers'; 
 const router = Router();
 
 // Rota para criar um novo usuário
-router.post('/users', createUser);
+router.post('/users', controller.createUser);
 
 // Rota para listar todos os usuários
-router.get('/users', listUsers);
+router.get('/users', controller.listUsers);
 
 // Rota para buscar um usuário por ID
-router.get('/users/:id', getUserById);
+router.get('/users/:id', controller.getUserById);
 
 // Rota para atualizar um usuário por ID
-router.put('/users/:id', updateUserById);
+router.put('/users/:id', controller.updateUserById);
 
 // Rota para excluir um usuário por ID
-router.delete('/users/:id', deleteUserById);
+router.delete('/users/:id', controller.deleteUserById);
 
 export default router;
 

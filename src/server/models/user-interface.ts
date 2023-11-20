@@ -2,7 +2,9 @@ export interface User {
     id: string;
     name: string;
     email: string;
-    idDepartamento: number;
+    password:string;
+    adm: Boolean;
+    departmentId: number;
     occupation: string;
     photo: string;
   }
