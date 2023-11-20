@@ -1,8 +1,14 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import utilsCrypt from '../utils/crypt'
+import { sign } from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
+
+interface IData{
+  user: userDTO;
+  token: string
+}
 
 export default {
   async createUser(req: Request, res: Response) {
@@ -135,7 +141,20 @@ export default {
         res.status(500).json({ message: 'keys not match' });
       }
 
+      const token = sign(
+        {
+          name:userTryLogin.name,
+          department: userTryLogin.departmentId
+        },
+        process.env.SECRET,
+        {
+          expiresIn:'1m',
+          algorithm:'HS256',
+          subject: String(userTryLogin.id)
+        }
+      )
 
+      return {token, user:userTryLogin}
 
     } catch (error) {
       throw new Error ('error during signin')
