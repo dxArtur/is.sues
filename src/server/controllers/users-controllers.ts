@@ -2,12 +2,12 @@ import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import utilsCrypt from '../utils/crypt'
 import { sign } from 'jsonwebtoken';
+import { AuthenticateDTO } from '../models/AuthenticationDTO';
 
 const prisma = new PrismaClient();
 
-
 interface IData{
-  user: userDTO;
+  user: AuthenticateDTO;
   token: string
 }
 
@@ -40,7 +40,7 @@ export default {
   async listUsers(req: Request, res: Response) {
     try {
       const users = await prisma.user.findMany();
-
+      
       if (!users || users.length === 0) {
         res.status(404).json({ message: 'No user records found' });
       }
@@ -103,30 +103,19 @@ export default {
     }
   },
 
+  async deleteUserById(req: Request, res: Response) {
+    try {
+      const userId = req.params.id;
 
-export const listUsers = async (req: Request, res: Response) => {
-  try {
-    // Implementação do listUsers...
-  } catch (error) {
-    res.status(500).json({ error: 'Error fetching users' });
-  }
-};
+      const deletedUser = await prisma.user.delete({
+        where: {
+          id: userId,
+        },
+      });
 
-export const getUserById = async (req: Request, res: Response) => {
-  try {
-    // Implementação do getUserById...
-  } catch (error) {
-    res.status(500).json({ error: 'Error fetching user' });
-  }
-};
-
-export const updateUserById = async (req: Request, res: Response) => {
-  try {
-    // Implementação do updateUserById...
-  } catch (error) {
-    res.status(500).json({ error: 'Error updating user' });
-  }
-};
+      if (!deletedUser) {
+        res.status(404).json({ message: 'User not found' });
+      }
 
       res.status(200).json({ message: 'User deleted', content: deletedUser });
     } catch (error) {
@@ -171,6 +160,5 @@ export const updateUserById = async (req: Request, res: Response) => {
     } catch (error) {
       throw new Error ('error during signin')
     }
-
   }
 };
