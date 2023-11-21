@@ -2,11 +2,12 @@ import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import utilsCrypt from '../utils/crypt'
 import { sign } from 'jsonwebtoken';
+import { AuthenticateDTO } from '../models/AuthenticationDTO';
 
 const prisma = new PrismaClient();
 
 interface IData{
-  user: userDTO;
+  user: AuthenticateDTO;
   token: string
 }
 
@@ -39,7 +40,7 @@ export default {
   async listUsers(req: Request, res: Response) {
     try {
       const users = await prisma.user.findMany();
-
+      
       if (!users || users.length === 0) {
         res.status(404).json({ message: 'No user records found' });
       }
