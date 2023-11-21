@@ -6,6 +6,10 @@ import { AuthenticateDTO } from '../models/AuthenticationDTO';
 
 const prisma = new PrismaClient();
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 9074f1fdb9c76125c244d88e6b404149af022c52
 interface IData{
   user: AuthenticateDTO;
   token: string
@@ -103,19 +107,30 @@ export default {
     }
   },
 
-  async deleteUserById(req: Request, res: Response) {
-    try {
-      const userId = req.params.id;
 
-      const deletedUser = await prisma.user.delete({
-        where: {
-          id: userId,
-        },
-      });
+export const listUsers = async (req: Request, res: Response) => {
+  try {
+    // Implementação do listUsers...
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching users' });
+  }
+};
 
-      if (!deletedUser) {
-        res.status(404).json({ message: 'User not found' });
-      }
+export const getUserById = async (req: Request, res: Response) => {
+  try {
+    // Implementação do getUserById...
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching user' });
+  }
+};
+
+export const updateUserById = async (req: Request, res: Response) => {
+  try {
+    // Implementação do updateUserById...
+  } catch (error) {
+    res.status(500).json({ error: 'Error updating user' });
+  }
+};
 
       res.status(200).json({ message: 'User deleted', content: deletedUser });
     } catch (error) {
@@ -160,5 +175,9 @@ export default {
     } catch (error) {
       throw new Error ('error during signin')
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 9074f1fdb9c76125c244d88e6b404149af022c52
   }
 };
