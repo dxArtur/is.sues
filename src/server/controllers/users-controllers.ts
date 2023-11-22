@@ -155,8 +155,8 @@ export default {
         }
       )
 
-      return {token, user:userTryLogin}
-
+        res.status(200).json({ message: 'the token is', content: token });
+        //return {token, user:userTryLogin}
     } catch (error) {
       throw new Error ('error during signin')
     }
