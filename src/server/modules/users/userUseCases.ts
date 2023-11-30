@@ -2,7 +2,7 @@ import { prisma } from "../../database/repositoryClient"
 import utilsCrypt from '../../utils/crypt'
 import { sign } from 'jsonwebtoken';
 
-export class userUseCase{
+export class UserUseCase{
   async signin({email, password}) {
       const userAttempAuth = await prisma.user.findFirstOrThrow({
           where: {
