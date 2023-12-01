@@ -1,1 +1,0 @@
-import prisma from '../../src/server/database/index'

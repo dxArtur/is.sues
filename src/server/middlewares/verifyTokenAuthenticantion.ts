@@ -6,6 +6,7 @@ interface IPayload{
     iat:number;
     exp: number;
     name:string;
+    department: string
   }
 
 export function verifyTokenAuthentication(
@@ -16,19 +17,21 @@ export function verifyTokenAuthentication(
     const header = req.headers.authorization
 
     if (!header) {
-        return res.status(403).json({message: 'token missing'})
+        return res.status(401).json({message: 'token missing'})
     }
-    const token = header.split("")[1]
+
+    const token = header.split(' ')[1]
 
     try {
-        const {sub, name} = verify(token, process.env.SECRET) as IPayload
+        const {name, department, sub} = verify(token, process.env.SECRET) as IPayload
         req.user = {
-            id: Number(sub),
-            name
+            id: sub,
+            name,
+            department
         }
 
         return next()
     } catch (error) {
-        return res.status(403).json({message:"token is not valid"})
+        return res.status(401).json({message:"token is not valid"})
     }
 }
