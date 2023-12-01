@@ -1,127 +1,40 @@
 import {Request,Response} from 'express'
-import Issue from '../models/issue-interface'
-import uuidv4 from 'uuidv4'
-import { prisma } from '../database'
+import { IssueUseCase } from '../modules/issues/issueUseCase'
 
+export class IssuesController {
 
+    private useCase:IssueUseCase
 
+    constructor(issueUseCase: IssueUseCase) {
+        this.useCase = issueUseCase
+    }
 
-export default {
-    async addIssue(req: Request, res: Response) {
-        try {
-            const {title, description, departamentId, labelsId, authorId} = req.body
-            
-            const issueAdd = await prisma.issue.create({
-                data: {
-                    title,
-                    description,
-                    departamentId,
-                    labelsId: {
-                        set: labelsId
-                    },
-                    author: {
-                        connect: {
-                            id: authorId
-                        }
-                    }
-                },
-            })
+    createIssue = async(req: Request, res: Response) =>{
+        const {title, description, departmentId, labelsId, authorId} = req.body
+        const response = await this.useCase.createIssue({title, description, departmentId, labelsId, authorId})
+        return res.status(200).json(response)
+    }
 
-            res.status(201).json({message: 'issue add with sucessfull', content: issueAdd})
-            
-        } catch (error) {
-            console.log(error)
-        }
-    },
-    async getIssue(req: Request, res: Response){
-        try {
-            const {issueId} = req.body
-
-            const issueFound = await prisma.issue.findUnique({
-                where: {
-                    id: issueId
-                }
-            })
-
-            if (!issueFound) {
-                res.status(404).json({message: 'issue not found'})
-            }
-
-            res.status(201).json({message: 'issue found', content: issueFound})
-
-        } catch (error) {
-            console.log(error)
-        }
-    },
+    getIssueById = async(req: Request, res: Response) =>{
+        const { id } = req.params;
+        const response = await this.useCase.getIssuesById({ id })
+        return res.status(200).json(response)
+    }
     
-    async updateIssue(req: Request, res: Response) {
-        try {
-            const {issueId} = req.body
-            const {title, description, departament, labelsId, authorId} = req.body
+    updateIssue = async(req: Request, res: Response) => {
+        const { id } = req.params
+        const response = await this.useCase.updateIssue({ id, title, description, departmentId, labelsId, authorId})
+        return res.status(200).json(response)
+    }
 
-            const issueFound = await prisma.issue.update({
-                where: {
-                    id: issueId
-                },
-                data: {
-                   title,
-                   description,
-                   departament,
-                   labelsId: {
-                    set: labelsId
-                },
-                author: {
-                    connect: {
-                        id: authorId
-                    }
-                }
-                }
-            })
+    deleteIssue =  async(req: Request, res: Response) => {
+        const { id } = req.params
+        const response = await this.useCase.deleteIssue({ id })
+        return res.status(200).json(response)
+    }
 
-            if (!issueFound) {
-                res.status(404).json({message: 'issue not found'})
-            }
-
-            res.status(201).json({message: 'issue updated', content: issueFound})
-
-        } catch (error) {
-            console.log(error)
-        }
-    },
-
-    async deleteIssue(req: Request, res: Response){
-        try {
-            const {issueId} = req.body
-
-            const issueFound = await prisma.issue.delete({
-                where: {
-                    id: issueId
-                }
-            })
-
-            if (!issueFound) {
-                res.status(404).json({message: 'issue not found'})
-            }
-
-            res.status(201).json({message: 'issue deleted', content: issueFound})
-
-        } catch (error) {
-            console.log(error)
-        }
-    },
-
-    async getAllIssues(req: Request, res:Response) {
-        try {
-            const allIssues = await prisma.issue.findMany()
-
-            if (!allIssues) {
-                res.status(404).json({message: 'not be issues record'})
-            }
-
-            res.status(201).json({message: 'all issues', content: allIssues})
-
-        } catch (error) {
-            console.log(error)
-        }
+    getAllIssues = async(req: Request, res:Response) => {
+        const response = await this.useCase.listIssues({ })
+        return res.status(200).json(response)
     }
 }

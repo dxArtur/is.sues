@@ -1,8 +1,13 @@
 import { Router } from 'express'
-import controller from '../controllers/users-controllers'
-const router = Router()
+import { UserController } from '../controllers/users-controllers'; 
+import { UserUseCase } from '../modules/users/userUseCases'
 
-router.post('/signin', controller.signin);
+const router = Router()
+const userUseCase = new UserUseCase
+const userController = new UserController(userUseCase)
+
+
+router.post('/signin', userController.signin)
 
 
 export default router;
