@@ -1,21 +1,23 @@
 import Router from "express"
-import { Request, Response } from "express"
-import controller from '../controllers/issues-controller'
-import Issue from "../models/issue-interface"
 import { verifyTokenAuthentication } from "../middlewares/verifyTokenAuthenticantion"
+import { IssueUseCase } from "../modules/issues/issueUseCase"
+import { IssuesController } from "../controllers/issues-controller"
 
-//const issuesController = new controller()
+
 const router = Router()
+const issueUseCase = new IssueUseCase()
+const issueController = new IssuesController(issueUseCase)
 
-router.post('/issues/new', verifyTokenAuthentication, controller.addIssue)
 
-router.get('/issues/:id', controller.getIssue)
+router.post('/issues/new', verifyTokenAuthentication, issueController.createIssue)
 
-router.put('/issues/:id', controller.updateIssue)
+router.get('/issues/:id', issueController.getIssueById)
 
-router.delete('/issues/:id', controller.deleteIssue)
+router.put('/issues/:id', issueController.updateIssue)
 
-router.get('/issues/all', controller.getAllIssues)
+router.delete('/issues/:id', issueController.deleteIssue)
+
+router.get('/issues/all', issueController.getAllIssues)
 
 
 export default router

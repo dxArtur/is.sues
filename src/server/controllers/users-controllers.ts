@@ -1,7 +1,5 @@
 import { Request, Response } from 'express'
-import { PrismaClient } from '@prisma/client'
 import {UserUseCase} from '../modules/users/userUseCases'
-const prisma = new PrismaClient()
 
 export class UserController {
   private caseUse:UserUseCase
@@ -22,27 +20,27 @@ export class UserController {
   }
 
   getUserById = async(req: Request, res: Response):Promise<Response> =>{
-    const userId = req.params.id
-    const response = await this.caseUse.getUserById({userId})
+    const id = req.params
+    const response = await this.caseUse.getUserById({id})
     return res.status(200).json(response)
   }
 
   updateUserById = async(req: Request, res: Response):Promise<Response> =>{
-    const userId = req.params.id;
+    const id = req.params
     const { name, email, password, departmentId, occupation, adm, photo } = req.body
-    const response = await this.caseUse.updateUser({userId, name, email, password, departmentId, occupation, adm, photo})
+    const response = await this.caseUse.updateUser({id, name, email, password, departmentId, occupation, adm, photo})
     return res.status(200).json(response)
   }
 
   deleteUserById = async(req: Request, res: Response):Promise<Response> =>{
-    const userId = req.params.id;
-    const response = await this.caseUse.deleteUser({userId})
+    const id = req.params
+    const response = await this.caseUse.deleteUser({id})
     return res.status(200).json(response)
   }
 
   signin = async(req: Request, res: Response):Promise<Response> =>{
     const {email, password} = req.body
-    const response = await this.caseUse.signin({email, password})
+    const response = await this.caseUse.signin({ email, password })
     return res.status(200).json(response)
   }
 }

@@ -1,9 +1,10 @@
+import { UserDto } from "../../../dtos/UserDTO";
 import { prisma } from "../../database/repositoryClient"
 import utilsCrypt from '../../utils/crypt'
 import { sign } from 'jsonwebtoken';
 
 export class UserUseCase{
-  async signin({email, password}) {
+  async signin({email, password}:UserDto) {
       const userAttempAuth = await prisma.user.findFirstOrThrow({
           where: {
             email: email,
@@ -14,7 +15,7 @@ export class UserUseCase{
           throw new Error ('User not found');
         }
   
-        const matchKeys = await utilsCrypt.match(password, userTryLogin.password)
+        const matchKeys = await utilsCrypt.match(password, userAttempAuth.password)
   
         if( ! matchKeys ) {
           throw new Error ('keys not match')
@@ -36,7 +37,7 @@ export class UserUseCase{
         return {token, userAttempAuth}
   }
 
-  async signup({name, email, password, departmentId, occupation, adm, photo}) {
+  async signup({name, email, password, departmentId, occupation, adm, photo}:UserDto) {
       const verifyExistUser = await prisma.user.findFirst({
           where:{
             email
@@ -70,7 +71,7 @@ export class UserUseCase{
     return allUsers
   }
 
-  async getUserById({id}) {
+  async getUserById({id}:UserDto) {
     const user = await prisma.user.findUnique({
       where: {
         id: id,
@@ -84,12 +85,12 @@ export class UserUseCase{
     return user
   }
 
-  async updateUser({userId, name, email, password, departmentId, occupation, adm, photo}) {
+  async updateUser({id, name, email, password, departmentId, occupation, adm, photo}:UserDto) {
     const hashedPassword = await utilsCrypt.cryptPass(password)
 
     const updatedUser = await prisma.user.update({
       where: {
-        id: userId,
+        id: id,
       },
       data: {
         name,
@@ -109,10 +110,10 @@ export class UserUseCase{
     return updatedUser
   }
 
-  async deleteUser({userId}) {
+  async deleteUser({id}:UserDto) {
     const userAttempDeleted = await prisma.user.delete({
       where: {
-        id: userId
+        id: id
       }
     })
 
