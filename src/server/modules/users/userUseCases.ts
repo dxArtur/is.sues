@@ -1,11 +1,18 @@
+import { PrismaClient } from "@prisma/client";
 import { UserDto } from "../../../dtos/UserDTO";
 import { prisma } from "../../database/repositoryClient"
 import utilsCrypt from '../../utils/crypt'
 import { sign } from 'jsonwebtoken';
 
 export class UserUseCase{
+  private repository: PrismaClient
+
+  constructor(repository: PrismaClient) {
+    this.repository = repository
+  }
+
   async signin({email, password}:UserDto) {
-      const userAttempAuth = await prisma.user.findFirstOrThrow({
+      const userAttempAuth = await this.repository.user.findFirstOrThrow({
           where: {
             email: email,
           }
@@ -26,7 +33,7 @@ export class UserUseCase{
             name:userAttempAuth.name,
             department: userAttempAuth.departmentId
           },
-          process.env.SECRET,
+          process.env.SECRET!,
           {
             expiresIn:'1h',
             algorithm:'HS256',
@@ -38,7 +45,7 @@ export class UserUseCase{
   }
 
   async signup({name, email, password, departmentId, occupation, adm, photo}:UserDto) {
-      const verifyExistUser = await prisma.user.findFirst({
+      const verifyExistUser = await this.repository.user.findFirst({
           where:{
             email
           }
@@ -47,7 +54,7 @@ export class UserUseCase{
           throw new Error('User already exists')
         }
       const hashedPassword = await utilsCrypt.cryptPass(password)
-      const newUser = await prisma.user.create({
+      const newUser = await this.repository.user.create({
       data: {
           name,
           email,
