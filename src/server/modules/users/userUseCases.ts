@@ -70,7 +70,7 @@ export class UserUseCase{
   }
 
   async listUsers() {
-    const allUsers = await prisma.user.findMany()
+    const allUsers = await this.repository.user.findMany({})
     if (!allUsers) {
       throw new Error('No have users Registered')
     }
@@ -78,8 +78,8 @@ export class UserUseCase{
     return allUsers
   }
 
-  async getUserById({id}:UserDto) {
-    const user = await prisma.user.findUnique({
+  async getUserById({id}: {id: string}) {
+    const user = await this.repository.user.findUnique({
       where: {
         id: id,
       },
@@ -95,7 +95,7 @@ export class UserUseCase{
   async updateUser({id, name, email, password, departmentId, occupation, adm, photo}:UserDto) {
     const hashedPassword = await utilsCrypt.cryptPass(password)
 
-    const updatedUser = await prisma.user.update({
+    const updatedUser = await this.repository.user.update({
       where: {
         id: id,
       },
@@ -118,7 +118,7 @@ export class UserUseCase{
   }
 
   async deleteUser({id}:UserDto) {
-    const userAttempDeleted = await prisma.user.delete({
+    const userAttempDeleted = await this.repository.user.delete({
       where: {
         id: id
       }
