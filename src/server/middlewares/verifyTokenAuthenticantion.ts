@@ -23,7 +23,7 @@ export function verifyTokenAuthentication(
     const token = header.split(' ')[1]
 
     try {
-        const {name, department, sub} = verify(token, process.env.SECRET) as IPayload
+        const {name, department, sub} = verify(token, process.env.SECRET!) as IPayload
         req.user = {
             id: sub,
             name,

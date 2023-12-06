@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import {UserUseCase} from '../modules/users/userUseCases'
+import { UserUseCase } from '../modules/users/userUseCases'
 
 export class UserController {
   private caseUse:UserUseCase

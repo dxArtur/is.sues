@@ -12,3 +12,21 @@ export async function fetchLabels() {
         console.error(error)
     }
 }
+
+
+export async function fetchUsers() {
+    try{
+        const response = await fetch('h')
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export async function selectLabel(labelIdIssue: number){
+
+    try{
+        const labels = await fetch()
+    }
+    const selected = labels.find(selected => selected.id === labelIdIssue)
+    return selected
+  }

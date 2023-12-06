@@ -95,6 +95,8 @@ describe('User use cases', ()=>{
             expect(userSelected.name).toBe(createdUser.name)
         }),
 
+        test
+
         test('Não deve ser possível adicionar dois usuários com o mesmo email', async()=>{
             const newUser: UserDto = {
                 name: 'usuario valido',
@@ -111,7 +113,8 @@ describe('User use cases', ()=>{
 
             expect(userInvalid).toBeUndefined()
             
-        })
+        }),
+
         
     })
 })
