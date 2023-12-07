@@ -10,7 +10,7 @@ export const signUpSchema = z.object({
   departmentId: z.string().optional(),
 });
 
-export const idUserSchema = z.string().uuid(); // Defina o esquema de validação para UUID
+export const idUserSchema = z.string().uuid();
 
 export const updateUserSchema = z.object({
   name: z.string().optional(),
