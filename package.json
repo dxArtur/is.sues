@@ -23,7 +23,8 @@
     "jsonwebtoken": "^9.0.2",
     "shortid": "^2.2.16",
     "uuid": "^9.0.1",
-    "uuidv4": "^6.2.13"
+    "uuidv4": "^6.2.13",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@babel/core": "^7.23.5",

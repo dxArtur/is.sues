@@ -18,7 +18,7 @@ app.use(bodyParser.json())
 
 app.use(cookieParser())
 app.use(session({
-      secret: process.env.SECRET,
+      secret: process.env.SECRET!,
       name: 'sessionId',
       resave: false,
       saveUninitialized: true,
