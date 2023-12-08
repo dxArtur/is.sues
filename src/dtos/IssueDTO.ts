@@ -5,7 +5,24 @@ export interface IssueDto {
     createdAt: Date;
     updatedAt: Date;
     status: boolean;
-    labelsId: number[];
     authorId: string;
     departmentId: string;
   }
+
+  export interface CreateIssueDto {
+    title: string;
+    description: string;
+    departmentId: string;
+    authorId: string;
+}
+
+export interface UpdateIssueDto {
+  id: string;               
+  title?: string;          
+  description?: string;   
+  departmentId?: string;    
+  authorId?: string;      
+}
+
+
+
