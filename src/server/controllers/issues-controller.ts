@@ -88,7 +88,7 @@ export class IssuesController {
     }
 
     getAllIssues = async(req: Request, res:Response) => {
-        const response = await this.useCase.listIssues({ })
+        const response = await this.useCase.listIssues({})
         return res.status(200).json(response)
     }
 }

@@ -17,7 +17,7 @@ router.put('/issues/:id', issueController.updateIssue)
 
 router.delete('/issues/:id', issueController.deleteIssue)
 
-router.get('/issues/all', issueController.getAllIssues)
+router.get('/issues', issueController.getAllIssues)
 
 
 export default router

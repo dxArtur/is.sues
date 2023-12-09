@@ -61,7 +61,7 @@ export class IssueUseCase{
     
     async listIssues({}) {
         try {
-            const allIssues = await prisma.issue.findMany({})
+            const allIssues = await prisma.issue.findMany()
             return allIssues
         } catch (error) {
             throw new Error("Erro ao buscar issues.");
