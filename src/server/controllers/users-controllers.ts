@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { UserUseCase } from '../modules/users/userUseCases'
 import { signUpSchema, idUserSchema, updateUserSchema, signinSchema } from '../schamas/userSchema';
+import { ZodError } from 'zod';
 
 export class UserController {
   private caseUse:UserUseCase
@@ -16,7 +17,16 @@ export class UserController {
       const response = await this.caseUse.signup(userData);
       return res.status(200).json(response);
     } catch (error) {
-      return res.status(400).json({ success: false, error: "Dados de entrada inválidos" });
+      if (error instanceof ZodError) {
+          return res.status(400).json({ 
+              error: "Dados de entrada inválidos", 
+              validationErrors: error.errors.map(e => ({
+                  path: e.path.join('.'),
+                  message: e.message
+              }))
+          });
+      }
+      return res.status(500).json({ error: "Erro interno do servidor" });
     }
   };
 
@@ -32,7 +42,16 @@ export class UserController {
       const response = await this.caseUse.getUserById({ id });
       return res.status(200).json(response);
     } catch (error) {
-        return res.status(400).json({ success: false, error: "ID inválido" })
+      if (error instanceof ZodError) {
+          return res.status(400).json({ 
+              error: "Dados de entrada inválidos", 
+              validationErrors: error.errors.map(e => ({
+                  path: e.path.join('.'),
+                  message: e.message
+              }))
+          });
+      }
+      return res.status(500).json({ error: "Erro interno do servidor" });
     }
   };
 
@@ -53,7 +72,16 @@ export class UserController {
       const response = await this.caseUse.updateUser({ id, name, email, password, departmentId, occupation, adm, photo });
       return res.status(200).json(response);
       } catch (error) {
-        return res.status(400).json({ success: false, error: "Dados de atualização inválidos" });
+        if (error instanceof ZodError) {
+            return res.status(400).json({ 
+                error: "Dados de entrada inválidos", 
+                validationErrors: error.errors.map(e => ({
+                    path: e.path.join('.'),
+                    message: e.message
+                }))
+            });
+        }
+        return res.status(500).json({ error: "Erro interno do servidor" });
       }
   };
 
@@ -65,7 +93,16 @@ export class UserController {
       const response = await this.caseUse.deleteUser({ id });
       return res.status(200).json(response);
     } catch (error) {
-        return res.status(400).json({ success: false, error: "ID inválido"});
+      if (error instanceof ZodError) {
+          return res.status(400).json({ 
+              error: "Dados de entrada inválidos", 
+              validationErrors: error.errors.map(e => ({
+                  path: e.path.join('.'),
+                  message: e.message
+              }))
+          });
+      }
+      return res.status(500).json({ error: "Erro interno do servidor" });
     }
   };
 
@@ -76,7 +113,16 @@ export class UserController {
       const response = await this.caseUse.signin({ email, password });
       return res.status(200).json(response);
     } catch (error) {
-        return res.status(400).json({ success: false, error: "Dados de entrada inválidos" });
+      if (error instanceof ZodError) {
+          return res.status(400).json({ 
+              error: "Dados de entrada inválidos", 
+              validationErrors: error.errors.map(e => ({
+                  path: e.path.join('.'),
+                  message: e.message
+              }))
+          });
+      }
+      return res.status(500).json({ error: "Erro interno do servidor" });
     }
   };
 }
