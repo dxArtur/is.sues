@@ -1,5 +1,5 @@
-import { CompanyDto, UpdateCompanyDto } from "../../../dtos/CompanyDTO"
-import { CompanyIdDto } from "../../../dtos/CompanyIdDTO"
+import { CompanyDto, UpdateCompanyDto } from "../../dtos/CompanyDTO"
+import { CompanyIdDto } from "../../dtos/CompanyIdDTO"
 import { prisma } from "../../database/repositoryClient"
 import utilsCrypt from '../../utils/crypt'
 

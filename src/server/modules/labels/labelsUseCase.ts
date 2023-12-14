@@ -1,6 +1,6 @@
 import { prisma } from "../../database/repositoryClient"
 import utilsCrypt from '../../utils/crypt'
-import { CreateLabelDto, GetLabelByIdDTO, UpdateLabelDto } from "../../../dtos/LabelDTO"
+import { CreateLabelDto, GetLabelByIdDTO, UpdateLabelDto } from "../../dtos/LabelDTO"
 import { sign } from 'jsonwebtoken';
 
 export class LabelUseCase{

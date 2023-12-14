@@ -1,5 +1,5 @@
 import { prisma } from "../../database/repositoryClient"
-import { DepartmentCreateDto, UpdateDepartmentDto } from "../../../dtos/DepartmentDTO"
+import { DepartmentCreateDto, UpdateDepartmentDto } from "../../dtos/DepartmentDTO"
 import utilsCrypt from '../../utils/crypt'
 
 export class DepartmentUseCase{

@@ -1,5 +1,5 @@
 import { prisma } from "../../database/repositoryClient"
-import { CreateIssueDto, UpdateIssueDto } from "../../../dtos/IssueDTO"
+import { CreateIssueDto, UpdateIssueDto } from "../../dtos/IssueDTO"
 import utilsCrypt from '../../utils/crypt'
 
 export class IssueUseCase{
