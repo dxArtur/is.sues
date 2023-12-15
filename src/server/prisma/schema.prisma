@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:mateus147@localhost:5432/user"
+  url      = "postgresql://postgres:postgres@localhost:5432/user"
 }
 
 model User {
@@ -31,7 +31,6 @@ model Issue {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   status Boolean @default(false)
-  labelsId Int[]
   author User @relation(fields: [authorId], references: [id])
   authorId String
   department   Department @relation(fields: [departmentId], references: [id])
