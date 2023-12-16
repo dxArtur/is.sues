@@ -55,6 +55,8 @@ model Company {
   name        String
   email String @unique
   password String
+  latitude  Float?
+  longitude Float?
   description String?
   departments Department[]
   @@map("companies")

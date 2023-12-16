@@ -11,18 +11,20 @@ export class CompanyUseCase {
         try {
             const validatedData = createCompanySchema.parse(companyData);
             const hashedPassword = await utilsCrypt.cryptPass(validatedData.password);
-
+    
             const newCompany = await prisma.company.create({
                 data: {
                     name: validatedData.name,
                     email: validatedData.email,
                     password: hashedPassword,
+                    latitude: validatedData.latitude,
+                    longitude: validatedData.longitude,
                     description: validatedData.description,
                 }
             });
-
+    
             return newCompany;
-
+    
         } catch (error) {
             if (error instanceof ZodError) {
                 throw new ValidationError("Erro de validação", error);
@@ -56,13 +58,13 @@ export class CompanyUseCase {
             const updatedCompany = await prisma.company.update({
                 where: { id: validatedData.id },
                 data: {
-                    name: validatedData.name,
-                    email: validatedData.email,
-                    password: hashedPassword,
-                    description: validatedData.description,
-                    departments: validatedData.departments ? {
-                        connect: validatedData.departments.map(depId => ({ id: depId })),
-                    } : undefined,
+                    ...(validatedData.name && { name: validatedData.name }),
+                    ...(validatedData.email && { email: validatedData.email }),
+                    ...(hashedPassword && { password: hashedPassword }),
+                    ...(validatedData.description && { description: validatedData.description }),
+                    ...(validatedData.departments && { departments: { connect: validatedData.departments.map(depId => ({ id: depId })) } }),
+                    ...(validatedData.latitude != null && { latitude: validatedData.latitude }),
+                    ...(validatedData.longitude != null && { longitude: validatedData.longitude }),
                 },
             });
     
