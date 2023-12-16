@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { Request, Response, NextFunction } from 'express'
 import { UserUseCase } from '../modules/users/userUseCases'
 import { signUpSchema, idUserSchema, updateUserSchema, signinSchema } from '../schamas/userSchema';
 import { ZodError } from 'zod';

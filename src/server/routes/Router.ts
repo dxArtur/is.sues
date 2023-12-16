@@ -6,15 +6,16 @@ import departamentRoutes from './department-routes'
 import companyRoutes from './company-routes'
 import labelRoutes from './label-routes';
 import authRoutes from './auth-routes'
+import { errorHandler } from "../middlewares/errorHandler"
 
 const router = Router()
 
-router.use('/', companyRoutes)
+router.use('/', companyRoutes, errorHandler)
 router.use('/', userRouter)
-router.use('/', issueRouter)
+router.use('/', issueRouter, errorHandler)
 router.use('/', seedRoutes)
-router.use('/', departamentRoutes)
-router.use('/', labelRoutes)
+router.use('/', departamentRoutes, errorHandler)
+router.use('/', labelRoutes, errorHandler)
 router.use('/', authRoutes)
 
 export default router

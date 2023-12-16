@@ -1,66 +1,87 @@
 import { prisma } from "../../database/repositoryClient"
 import { DepartmentCreateDto, UpdateDepartmentDto } from "../../dtos/DepartmentDTO"
-import utilsCrypt from '../../utils/crypt'
+import utilsCrypt from '../../utils/crypt';
+import { createDepartmentSchema, departmentIdSchema, updateDepartmentSchema } from '../../schamas/departamentSchema';
+import { ZodError } from 'zod';
+import { ValidationError, DatabaseError } from '../../Error/CustomError';
 
 export class DepartmentUseCase{
     async createDepartment({ name, companyId }: DepartmentCreateDto) {
         try {
+            const validatedData = createDepartmentSchema.parse({ name, companyId });
             const newDepartment = await prisma.department.create({
                 data: {
-                    name,
+                    name: validatedData.name,
                     company: {
-                        connect: { id: companyId }
+                        connect: { id: validatedData.companyId }
                     }
                 }
-            })
-
+            });
             return newDepartment;
-
+    
         } catch (error) {
-           throw new Error("Erro ao criar o departamento.");
+            if (error instanceof ZodError) {
+                throw new ValidationError("Erro de validação", error);
+            }
+            throw new DatabaseError("Erro ao criar a departamento.");
         }
     }
 
     async getDepartmentsById({ id }: { id: string }) {
         try {
+            const validatedData = departmentIdSchema.parse({ id });
             const department = await prisma.department.findUnique({
-                where: { id },
+                where: { id: validatedData.id },
             });
-
+    
             if (!department) {
                 throw new Error("Departamento não encontrado");
             }
-
+    
             return department;
         } catch (error) {
-            throw new Error("Erro ao buscar o departamento.");
+            if (error instanceof ZodError) {
+                throw new ValidationError("Erro de validação", error);
+            }
+            throw new DatabaseError("Erro ao buscars o departamento.");
         }
     }
 
-    
-    async updateDepartment({ id, name, companyId }: UpdateDepartmentDto) {
+    async updateDepartment(updateData: UpdateDepartmentDto) {
         try {
+            const validatedData = updateDepartmentSchema.parse(updateData);
             const updatedDepartment = await prisma.department.update({
-                where: { id },
+                where: { id: validatedData.id },
                 data: {
-                    name,
-                    companyId
+                    name: validatedData.name,
+                    companyId: validatedData.companyId
                 }
             });
+    
             return updatedDepartment;
+    
         } catch (error) {
-            throw new Error("Erro ao atualizar o departamento.");
+            if (error instanceof ZodError) {
+                throw new ValidationError("Erro de validação", error);
+            }
+            throw new DatabaseError("Erro ao atualizar o departamento.");
         }
     }
 
     async deleteDepartment({ id }: { id: string }) {
         try {
+            const validatedData = departmentIdSchema.parse({ id });
+    
             const deletedDepartment = await prisma.department.delete({
-                where: { id }
+                where: { id: validatedData.id },
             });
+    
             return deletedDepartment;
         } catch (error) {
-            throw new Error("Erro ao deletar o departamento.");
+            if (error instanceof ZodError) {
+                throw new ValidationError("Erro de validação", error);
+            }
+            throw new DatabaseError("Erro ao deletar o departamento.");
         }
     }
     
