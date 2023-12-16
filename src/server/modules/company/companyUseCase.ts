@@ -2,8 +2,34 @@ import { CompanyDto, UpdateCompanyDto } from "../../dtos/CompanyDTO"
 import { CompanyIdDto } from "../../dtos/CompanyIdDTO"
 import { prisma } from "../../database/repositoryClient"
 import utilsCrypt from '../../utils/crypt'
+import { createCompanySchema } from '../../schamas/companySchema';
+import { ZodError } from 'zod';
+import { ValidationError, DatabaseError } from '../../Error/CustomError';
 
 export class CompanyUseCase {
+    /*async createCompany(companyData: CompanyDto) {
+        try {
+            const validatedData = createCompanySchema.parse(companyData);
+            const hashedPassword = await utilsCrypt.cryptPass(validatedData.password);
+
+            const newCompany = await prisma.company.create({
+                data: {
+                    name: validatedData.name,
+                    email: validatedData.email,
+                    password: hashedPassword,
+                    description: validatedData.description,
+                }
+            });
+
+            return newCompany;
+
+        } catch (error) {
+            if (error instanceof ZodError) {
+                throw new ValidationError("Erro de validação", error);
+            }
+            throw new DatabaseError("Erro ao criar a empresa.");
+        }
+    }*/
     async createCompany({ name, email, password, description }: CompanyDto) {
         const hashedPassword = await utilsCrypt.cryptPass(password);
         try {
@@ -60,7 +86,6 @@ export class CompanyUseCase {
             throw new Error("Erro ao atualizar a empresa.");
         } 
     }
-
     async deleteCompany({id}:CompanyIdDto) {
         try {
             const deletedCompany = await prisma.company.delete({

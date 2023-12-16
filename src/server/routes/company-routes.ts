@@ -6,7 +6,7 @@ const router = Router()
 const companyUseCase = new CompanyUseCase
 const companyController = new CompanyController(companyUseCase)
 
-router.post('/company', companyController.createCompany);
+router.post('/company/new', companyController.createCompany);
 router.get('/company/all', companyController.getAllCompanies);
 router.delete('/company/all', companyController.deleteAllCompanies);
 router.get('/company/:id', companyController.getCompanyById);

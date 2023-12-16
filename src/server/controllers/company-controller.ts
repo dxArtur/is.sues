@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { Request, Response, NextFunction } from 'express'
 import { CompanyUseCase } from '../modules/company/companyUseCase'
 import { createCompanySchema, updateCompanySchema } from '../schamas/companySchema';
 import { ZodError } from 'zod';
@@ -10,7 +10,6 @@ export class CompanyController {
     constructor(companyUseCase: CompanyUseCase) {
       this.caseUse = companyUseCase
     }
-
     createCompany = async(req: Request, res: Response) =>{
         try {
             const validatedData = createCompanySchema.parse(req.body);
@@ -31,6 +30,15 @@ export class CompanyController {
             return res.status(500).json({ success: false, error: "Erro interno do servidor" });
         }
     }
+    /*createCompany = async(req: Request, res: Response, next: NextFunction) =>{
+        try {
+            const { name, email, password, description, departments } = req.body;
+            const response = await this.caseUse.createCompany({ name, email, password, description, departments })
+            return res.status(200).json(response)
+        } catch (error) {
+            next(error); // Passa o erro para o próximo middleware (errorHandler)
+        }
+    }*/
     getCompanyById = async(req: Request, res: Response) => {
         const { id } = req.params;
         console.log('ID recebido:', id); 
