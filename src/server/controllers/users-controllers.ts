@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { UserUseCase } from '../modules/users/userUseCases'
+import { upload } from '../middlewares/multerPhoto';
 import { signUpSchema, idUserSchema, updateUserSchema, signinSchema } from '../schamas/userSchema';
 import { ZodError } from 'zod';
 
@@ -9,7 +10,6 @@ export class UserController {
   constructor(userUseCase: UserUseCase) {
     this.caseUse = userUseCase;
   }
-
   
   signup = async (req: Request, res: Response): Promise<Response> => {
     try {
@@ -123,6 +123,28 @@ export class UserController {
           });
       }
       return res.status(500).json({ error: "Erro interno do servidor" });
+    }
+  };
+  updateProfilePicture = async (req: Request, res: Response) : Promise<Response> =>  {
+    try {
+        const { id } = req.params;
+        const file = req.file;
+        if (!file) {
+            return res.status(400).json({ message: 'Nenhum arquivo foi enviado.' });
+        }
+        const updatedUser = await this.caseUse.updateProfilePicture({id}, file);
+        return res.status(200).json({ 
+            message: 'Imagem do perfil atualizada com sucesso.',
+            user: updatedUser 
+        });
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("Erro detectado:", error.message);
+        return res.status(500).json({ error: error.message });
+        } else {
+            console.error("Erro desconhecido:", error);
+            return res.status(500).json({ error: "Erro interno do servidor" });
+        }
     }
   };
 }

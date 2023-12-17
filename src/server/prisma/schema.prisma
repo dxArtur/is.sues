@@ -17,7 +17,7 @@ model User {
   password String
   occupation String
   adm Boolean
-  photo String
+  photo String?
   departmentId String?
   department   Department? @relation(fields: [departmentId], references: [id])
   issues       Issue[]

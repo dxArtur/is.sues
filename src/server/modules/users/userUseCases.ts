@@ -3,6 +3,7 @@ import { UserDto } from "../../dtos/UserDTO";
 import { prisma } from "../../database/repositoryClient"
 import utilsCrypt from '../../utils/crypt'
 import { sign } from 'jsonwebtoken';
+import path from 'path';
 
 export class UserUseCase{
   private repository: PrismaClient
@@ -132,6 +133,22 @@ export class UserUseCase{
     }
   
     return userAttempDeleted
+  }
+  async updateProfilePicture({id}: {id: string}, file: Express.Multer.File) {
+    if (!file) {
+        throw new Error('Nenhum arquivo foi enviado.');
+    }
+
+    const filePath = path.join(__dirname, '..', 'uploads', file.filename);
+
+    const updatedUser = await this.repository.user.update({
+        where: { id: id },
+        data: {
+            photo: filePath
+        }
+    });
+
+    return updatedUser;
   }
 
 }
