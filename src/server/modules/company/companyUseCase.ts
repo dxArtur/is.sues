@@ -2,24 +2,34 @@ import { CompanyDto, UpdateCompanyDto } from "../../dtos/CompanyDTO"
 import { CompanyIdDto } from "../../dtos/CompanyIdDTO"
 import { prisma } from "../../database/repositoryClient"
 import utilsCrypt from '../../utils/crypt'
+import { createCompanySchema, updateCompanySchema } from '../../schamas/companySchema';
+import { ZodError } from 'zod';
+import { ValidationError, DatabaseError } from '../../Error/CustomError';
 
 export class CompanyUseCase {
-    async createCompany({ name, email, password, description }: CompanyDto) {
-        const hashedPassword = await utilsCrypt.cryptPass(password);
+    async createCompany(companyData: CompanyDto) {
         try {
+            const validatedData = createCompanySchema.parse(companyData);
+            const hashedPassword = await utilsCrypt.cryptPass(validatedData.password);
+    
             const newCompany = await prisma.company.create({
                 data: {
-                    name,
-                    email,
+                    name: validatedData.name,
+                    email: validatedData.email,
                     password: hashedPassword,
-                    description,
+                    latitude: validatedData.latitude,
+                    longitude: validatedData.longitude,
+                    description: validatedData.description,
                 }
             });
-
+    
             return newCompany;
-
+    
         } catch (error) {
-            throw new Error("Erro ao criar a empresa.");
+            if (error instanceof ZodError) {
+                throw new ValidationError("Erro de validação", error);
+            }
+            throw new DatabaseError("Erro ao criar a empresa.");
         }
     }
 
@@ -35,40 +45,47 @@ export class CompanyUseCase {
             throw new Error("Erro ao buscar a empresa.");
         }
     }
-    async updateCompany({ id, name, email, password, description, departments }: UpdateCompanyDto) {
-        let hashedPassword;
-        if (password) {
-            hashedPassword = await utilsCrypt.cryptPass(password);
-        }
-
+    async updateCompany(updateData: UpdateCompanyDto) {
         try {
+            // Valida os dados de entrada
+            const validatedData = updateCompanySchema.parse(updateData);
+    
+            let hashedPassword;
+            if (validatedData.password) {
+                hashedPassword = await utilsCrypt.cryptPass(validatedData.password);
+            }
+    
             const updatedCompany = await prisma.company.update({
-                where: { id },
+                where: { id: validatedData.id },
                 data: {
-                    name,
-                    email,
-                    password: hashedPassword,
-                    description,
-                    departments: departments ? {
-                        connect: departments.map(depId => ({ id: depId })),
-                    } : undefined,
+                    ...(validatedData.name && { name: validatedData.name }),
+                    ...(validatedData.email && { email: validatedData.email }),
+                    ...(hashedPassword && { password: hashedPassword }),
+                    ...(validatedData.description && { description: validatedData.description }),
+                    ...(validatedData.departments && { departments: { connect: validatedData.departments.map(depId => ({ id: depId })) } }),
+                    ...(validatedData.latitude != null && { latitude: validatedData.latitude }),
+                    ...(validatedData.longitude != null && { longitude: validatedData.longitude }),
                 },
             });
-
+    
             return updatedCompany;
+    
         } catch (error) {
-            throw new Error("Erro ao atualizar a empresa.");
-        } 
+            if (error instanceof ZodError) {
+                throw new ValidationError("Erro de validação", error);
+            }
+            throw new DatabaseError("Erro ao atualizar a empresa.");
+        }
     }
 
-    async deleteCompany({id}:CompanyIdDto) {
+    async deleteCompany({id}: { id: string }) {
         try {
+            console.log(id);
             const deletedCompany = await prisma.company.delete({
                 where: {
                     id: id
                 }
-            })
-
+            });
             return deletedCompany            
         } catch (error) {
             throw new Error("Erro ao deletar a empresa.");
@@ -84,7 +101,7 @@ export class CompanyUseCase {
         } 
     }
 
-    async deleteAllCompanies({}) {
+    async deleteAllCompanies() {
         try{
             const deleteAllCompanies = await prisma.company.deleteMany()
             return deleteAllCompanies

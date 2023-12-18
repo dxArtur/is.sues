@@ -1,7 +1,5 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { DepartmentUseCase } from '../modules/departments/departmenstUseCase';
-import { createDepartmentSchema, departmentIdSchema, updateDepartmentSchema } from '../schamas/departamentSchema';
-import { ZodError } from 'zod';
 
 export class DepartmentController {
 
@@ -11,82 +9,45 @@ export class DepartmentController {
         this.caseUse = departmentUseCase
     }
 
-    createDepartment = async(req: Request, res: Response) => {
+    createDepartment = async(req: Request, res: Response, next: NextFunction) => {
         try {
-            const validatedData = createDepartmentSchema.parse(req.body);
-            const response = await this.caseUse.createDepartment(validatedData);
-            return res.status(200).json(response);
+            const { name, companyId } = req.body;
+            const response = await this.caseUse.createDepartment({ name, companyId })
+            return res.status(200).json(response)
         } catch (error) {
-            if (error instanceof ZodError) {
-                return res.status(400).json({ 
-                    success: false, 
-                    error: "Dados de entrada inválidos", 
-                    validationErrors: error.errors.map(e => ({
-                        path: e.path.join('.'),
-                        message: e.message
-                    }))
-                });
-            }
-            return res.status(500).json({ success: false, error: "Erro interno do servidor" });
+            next(error);
         }
     }
 
-    getDepartmentById = async(req: Request, res: Response) =>{
-        try {
-            const validatedParams = departmentIdSchema.parse(req.params);
-            const response = await this.caseUse.getDepartmentsById(validatedParams);
-            return res.status(200).json(response);
+    getDepartmentById = async(req: Request, res: Response, next: NextFunction) =>{
+        try { 
+            const { id } = req.params;
+            const response = await this.caseUse.getDepartmentsById({ id })
+            return res.status(200).json(response)
         } catch (error) {
-            if (error instanceof ZodError) {
-                return res.status(400).json({ 
-                    success: false, 
-                    error: "Dados de entrada inválidos", 
-                    validationErrors: error.errors.map(e => ({
-                        path: e.path.join('.'),
-                        message: e.message
-                    }))
-                });
-            }
-            return res.status(500).json({ success: false, error: "Erro interno do servidor" });
+            next(error);
         }
     }
 
-    updateDepartment = async(req: Request, res: Response) =>{
+    updateDepartment = async(req: Request, res: Response, next: NextFunction) => {
+        const { id } = req.params
+        const { name, companyId } = req.body
         try {
-            const validatedData = updateDepartmentSchema.parse({ ...req.params, ...req.body });
-            const response = await this.caseUse.updateDepartment(validatedData);
+            const response = await this.caseUse.updateDepartment({ id, name, companyId });
             return res.status(200).json(response);
         } catch (error) {
-            if (error instanceof ZodError) {
-                return res.status(400).json({ 
-                    success: false, 
-                    error: "Dados de entrada inválidos", 
-                    validationErrors: error.errors.map(e => ({
-                        path: e.path.join('.'),
-                        message: e.message
-                    }))
-                });
-            }
-            return res.status(500).json({ success: false, error: "Erro interno do servidor" });
+            next(error);
         }
-    }
+    };
+    
 
-    deleteDepartment = async(req: Request, res: Response) => {
+    deleteDepartment = async(req: Request, res: Response, next: NextFunction) => {
+        const { id } = req.params
         try {
-            const validatedParams = departmentIdSchema.parse(req.params);
-            const response = await this.caseUse.deleteDepartment(validatedParams);
-            return res.status(200).json(response);
+            const response = await this.caseUse.deleteDepartment({ id })
+            return res.status(200).json(response)
         } catch (error) {
-            if (error instanceof ZodError) {
-                return res.status(400).json({ 
-                    error: "Dados de entrada inválidos", 
-                    validationErrors: error.errors.map(e => ({
-                        path: e.path.join('.'),
-                        message: e.message
-                    }))
-                });
-            }
-            return res.status(500).json({ error: "Erro interno do servidor" });
+            next(error);
         }
     }
 

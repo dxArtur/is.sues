@@ -6,7 +6,7 @@ export const signUpSchema = z.object({
   password: z.string(),
   occupation: z.string(),
   adm: z.boolean(),
-  photo: z.string(),
+  photo: z.string().optional(),
   departmentId: z.string().optional(),
 });
 

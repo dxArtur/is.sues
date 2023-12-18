@@ -17,7 +17,7 @@ model User {
   password String
   occupation String
   adm Boolean
-  photo String
+  photo String?
   departmentId String?
   department   Department? @relation(fields: [departmentId], references: [id])
   issues       Issue[]
@@ -55,6 +55,8 @@ model Company {
   name        String
   email String @unique
   password String
+  latitude  Float?
+  longitude Float?
   description String?
   departments Department[]
   @@map("companies")

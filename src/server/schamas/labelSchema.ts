@@ -4,10 +4,10 @@ export const createLabelSchema = z.object({
     name: z.string().min(1, 'Nome é obrigatório'),
     description: z.string(),
     departmentId: z.string().uuid('ID do departamento inválido'),
-  });
+});
 
-  export const labelIdSchema = z.object({
-    id: z.number().int('ID inválido'),
+export const labelIdSchema = z.object({
+  id: z.number().int('ID inválido'),
 });
 
 export const updateLabelSchema = z.object({

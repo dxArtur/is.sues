@@ -6,7 +6,6 @@ import dotenv from 'dotenv'
 import session from 'express-session'
 import cookieParser from 'cookie-parser'
 
-
 dotenv.config()
 const app = express()
 
@@ -26,9 +25,7 @@ app.use(session({
   })
 )
 
-
-
-app.use('/api', routes)
+app.use('/api', routes);
 
 app.listen(3030, () =>{
   console.log('server running on port 3030')

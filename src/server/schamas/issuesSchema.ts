@@ -15,6 +15,7 @@ export const createIssueSchema = z.object({
     id: z.string().uuid('ID inválido'),
     title: z.string().optional(),
     description: z.string().optional(),
+    status: z.boolean().optional(),
     departmentId: z.string().uuid().optional(),
     authorId: z.string().uuid().optional(),
   });

@@ -5,6 +5,8 @@ export const createCompanySchema = z.object({
   email: z.string().email('Email inválido'),
   password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres'),
   description: z.string().optional(),
+  latitude: z.number().min(-90).max(90).optional(),
+  longitude: z.number().min(-180).max(180).optional(),
   departments: z.array(z.string()).optional(),
 });
 
@@ -14,6 +16,8 @@ export const updateCompanySchema = z.object({
   email: z.string().email('Email inválido').optional(),
   password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres'),
   description: z.string().optional(),
+  latitude: z.number().min(-90).max(90).optional(),
+  longitude: z.number().min(-180).max(180).optional(),
   departments: z.array(z.string()).optional(),
 });
 

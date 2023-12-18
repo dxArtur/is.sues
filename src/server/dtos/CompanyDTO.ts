@@ -3,6 +3,8 @@ export interface CompanyDto {
     name: string;
     email: string;
     password: string;
+    latitude?: number;
+    longitude?: number;
     description?: string|null;
     departments?: String[];
 }
@@ -12,6 +14,8 @@ export interface UpdateCompanyDto {
     name?: string;               // Opcional
     email?: string;              // Opcional
     password: string;            // Obrigatório para autorizar
+    latitude?: number;
+    longitude?: number;
     description?: string | null; // Opcional
     departments?: string[];      // Opcional
 }

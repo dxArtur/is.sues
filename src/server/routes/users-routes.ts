@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { UserController } from '../controllers/users-controllers'; 
 import { UserUseCase } from '../modules/users/userUseCases';
 import { prisma } from '../database/repositoryClient';
+import { upload } from '../middlewares/multerPhoto';
 
 const router = Router()
 const userUseCase = new UserUseCase(prisma)
@@ -21,6 +22,9 @@ router.put('/users/:id', userController.updateUserById);
 
 // Rota para excluir um usuário por ID
 router.delete('/users/:id', userController.deleteUserById);
+
+//Rota para adicionar foto ao perfil do usuário por ID
+router.post('/users/:id/profile-picture', upload.single('profilePicture'), userController.updateProfilePicture);
 
 export default router;
 

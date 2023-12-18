@@ -3,6 +3,8 @@ import { UserDto } from "../../dtos/UserDTO";
 import { prisma } from "../../database/repositoryClient"
 import utilsCrypt from '../../utils/crypt'
 import { sign } from 'jsonwebtoken';
+import path from 'path';
+import fs from 'fs';
 
 export class UserUseCase{
   private repository: PrismaClient
@@ -31,6 +33,7 @@ export class UserUseCase{
     const token = sign(
       {
         name: userAttempAuth.name,
+        adm: userAttempAuth.adm,
         department: userAttempAuth.departmentId,
       },
       process.env.SECRET!,
@@ -121,17 +124,46 @@ export class UserUseCase{
   }  
 
   async deleteUser({id}: {id: string}) {
-    const userAttempDeleted = await this.repository.user.delete({
-      where: {
-        id: id
-      }
-    })
-  
-    if (!userAttempDeleted) {
-      throw new Error('User not found')
+    const user = await this.repository.user.findUnique({
+        where: { id: id },
+    });
+
+    if (!user) {
+        throw new Error('User not found');
     }
-  
-    return userAttempDeleted
+
+    if (user.photo) {
+        const filePath = path.join(__dirname, '..', 'uploads', path.basename(user.photo));
+        fs.unlink(filePath, (err) => {
+            if (err) {
+                console.error("Erro ao excluir a imagem do perfil:", err);
+            }
+        });
+    }
+
+    const userAttempDeleted = await this.repository.user.delete({
+        where: { id: id }
+    });
+
+    return userAttempDeleted;
+  }
+
+
+  async updateProfilePicture({id}: {id: string}, file: Express.Multer.File) {
+    if (!file) {
+        throw new Error('Nenhum arquivo foi enviado.');
+    }
+
+    const filePath = path.join(__dirname, '..', 'uploads', file.filename);
+
+    const updatedUser = await this.repository.user.update({
+        where: { id: id },
+        data: {
+            photo: filePath
+        }
+    });
+
+    return updatedUser;
   }
 
 }

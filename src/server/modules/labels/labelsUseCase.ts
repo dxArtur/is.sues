@@ -2,60 +2,89 @@ import { prisma } from "../../database/repositoryClient"
 import utilsCrypt from '../../utils/crypt'
 import { CreateLabelDto, GetLabelByIdDTO, UpdateLabelDto } from "../../dtos/LabelDTO"
 import { sign } from 'jsonwebtoken';
+import { createLabelSchema, labelIdSchema, updateLabelSchema } from '../../schamas/labelSchema';
+import { ZodError } from 'zod';
+import { ValidationError, DatabaseError } from '../../Error/CustomError';
 
 export class LabelUseCase{
     async createLabel(labelData: CreateLabelDto) {
         try {
+            const validatedData = createLabelSchema.parse(labelData);
+    
             const newLabel = await prisma.label.create({
                 data: {
-                    name: labelData.name,
-                    description: labelData.description,
-                    department: { connect: { id: labelData.departmentId } }
+                    name: validatedData.name,
+                    description: validatedData.description,
+                    department: { connect: { id: validatedData.departmentId } }
                 }
             });
-
+    
             return newLabel;
         } catch (error) {
-            throw new Error("Erro ao criar o label.");
+            if (error instanceof ZodError) {
+                throw new ValidationError("Erro de validação", error);
+            }
+            throw new DatabaseError("Erro ao criar o label.");
         }
     }
 
     async getLabelById({ id }: GetLabelByIdDTO) {
         try {
+            const validatedData = labelIdSchema.parse({ id });
+    
             const label = await prisma.label.findUnique({
-                where: { id },
+                where: { id: validatedData.id },
             });
-
+    
+            if (!label) {
+                throw new Error("Label não encontrado.");
+            }
+    
             return label;
         } catch (error) {
-            throw new Error("Erro ao buscar o label.");
+            if (error instanceof ZodError) {
+                throw new ValidationError("Erro de validação", error);
+            }
+            throw new DatabaseError("Erro ao buscar o label.");
         }
     }
     async updateLabel(labelData: UpdateLabelDto) {
         try {
+            const validatedData = updateLabelSchema.parse(labelData);
+    
             const updatedLabel = await prisma.label.update({
-                where: { id: labelData.id },
+                where: { id: validatedData.id },
                 data: {
-                    ...(labelData.name && { name: labelData.name }),
-                    ...(labelData.description && { description: labelData.description }),
-                    ...(labelData.departmentId && { department: { connect: { id: labelData.departmentId } } })
+                    ...(validatedData.name && { name: validatedData.name }),
+                    ...(validatedData.description && { description: validatedData.description }),
+                    ...(validatedData.departmentId && { department: { connect: { id: validatedData.departmentId } } })
                 }
             });
-
+    
             return updatedLabel;
         } catch (error) {
-            throw new Error("Erro ao atualizar o label.");
+            if (error instanceof ZodError) {
+                throw new ValidationError("Erro de validação", error);
+            }
+            throw new DatabaseError("Erro ao atualizar o label.");
         }
     }
+    
 
     async deleteLabel({ id }: { id: number }) {
         try {
+            const validatedData = labelIdSchema.parse({ id });
+    
             const deletedLabel = await prisma.label.delete({
-                where: { id }
+                where: { id: validatedData.id },
             });
+    
             return deletedLabel;
         } catch (error) {
-            throw new Error("Erro ao deletar o label.");
+            if (error instanceof ZodError) {
+                throw new ValidationError("Erro de validação", error);
+            }
+            throw new DatabaseError("Erro ao deletar o label.");
         }
     }
     
