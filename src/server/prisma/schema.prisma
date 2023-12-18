@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:postgres@localhost:5432/user"
+  url      = "postgresql://postgres:mateus147@localhost:5432/user"
 }
 
 model User {
@@ -67,4 +67,11 @@ model Label{
   department   Department @relation(fields: [departmentId], references: [id])
   departmentId String
   @@map("labels")
+}
+
+model Coordenada {
+  id        Int      @id @default(autoincrement())
+  nome      String?
+  latitude  Float?
+  longitude Float?
 }

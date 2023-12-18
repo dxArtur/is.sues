@@ -6,6 +6,7 @@ import departamentRoutes from './department-routes'
 import companyRoutes from './company-routes'
 import labelRoutes from './label-routes';
 import authRoutes from './auth-routes'
+import coordinates from './coordinates-routes'
 
 const router = Router()
 
@@ -16,5 +17,6 @@ router.use('/', seedRoutes)
 router.use('/', departamentRoutes)
 router.use('/', labelRoutes)
 router.use('/', authRoutes)
+router.use('/', coordinates)
 
 export default router
