@@ -33,6 +33,7 @@ export class UserUseCase{
     const token = sign(
       {
         name: userAttempAuth.name,
+        adm: userAttempAuth.adm,
         department: userAttempAuth.departmentId,
       },
       process.env.SECRET!,

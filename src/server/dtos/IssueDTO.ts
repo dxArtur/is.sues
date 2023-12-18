@@ -20,6 +20,7 @@ export interface UpdateIssueDto {
   id: string;               
   title?: string;          
   description?: string;   
+  status?: Boolean;
   departmentId?: string;    
   authorId?: string;      
 }

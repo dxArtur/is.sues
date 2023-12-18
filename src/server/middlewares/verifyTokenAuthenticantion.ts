@@ -6,6 +6,7 @@ interface IPayload{
     iat:number;
     exp: number;
     name:string;
+    adm: boolean;
     department: string
   }
 
@@ -23,10 +24,11 @@ export function verifyTokenAuthentication(
     const token = header.split(' ')[1]
 
     try {
-        const {name, department, sub} = verify(token, process.env.SECRET!) as IPayload
+        const {name, adm, department, sub} = verify(token, process.env.SECRET!) as IPayload
         req.user = {
             id: sub,
             name,
+            adm,
             department
         }
 
@@ -35,3 +37,10 @@ export function verifyTokenAuthentication(
         return res.status(401).json({message:"token is not valid"})
     }
 }
+export const verifyAdminAuth = (req: Request, res: Response, next: NextFunction) => {
+    if (req.user && req.user.adm) {
+        next();
+    } else {
+        return res.status(403).json({ message: 'Acesso restrito a administradores' });
+    }
+};

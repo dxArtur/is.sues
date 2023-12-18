@@ -53,12 +53,12 @@ export class IssueUseCase{
     async updateIssue(issueData: UpdateIssueDto) {
     try {
         const validatedData = updateIssueSchema.parse(issueData);
-
         const updatedIssue = await prisma.issue.update({
             where: { id: validatedData.id },
             data: {
                 ...(validatedData.title && { title: validatedData.title }),
                 ...(validatedData.description && { description: validatedData.description }),
+                ...(validatedData.status && { status: validatedData.status }),
                 ...(validatedData.departmentId && { department: { connect: { id: validatedData.departmentId } } }),
                 ...(validatedData.authorId && { author: { connect: { id: validatedData.authorId } } })
             }
@@ -77,7 +77,6 @@ export class IssueUseCase{
     async deleteIssue({ id }: { id: string }) {
         try {
             const validatedData = issueIdSchema.parse({ id });
-
             const deletedIssue = await prisma.issue.delete({
                 where: { id: validatedData.id },
             });

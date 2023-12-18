@@ -78,14 +78,14 @@ export class CompanyUseCase {
         }
     }
 
-    async deleteCompany({id}:CompanyIdDto) {
+    async deleteCompany({id}: { id: string }) {
         try {
+            console.log(id);
             const deletedCompany = await prisma.company.delete({
                 where: {
                     id: id
                 }
-            })
-
+            });
             return deletedCompany            
         } catch (error) {
             throw new Error("Erro ao deletar a empresa.");
