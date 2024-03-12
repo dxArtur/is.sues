@@ -5,7 +5,7 @@ export interface UserDto {
     password: string;
     occupation: string;
     adm: boolean;
-    photo: string;
+    photo?: string;
     departmentId?: string;
     issues?: String[];
   }

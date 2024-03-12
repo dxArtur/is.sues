@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { DepartmentUseCase } from '../modules/departments/departmenstUseCase';
 
 export class DepartmentController {
@@ -9,33 +9,54 @@ export class DepartmentController {
         this.caseUse = departmentUseCase
     }
 
-    createDepartment = async(req: Request, res: Response) => {
-        const { name, companyId } = req.body;
-        const response = await this.caseUse.createDepartment({ name, companyId })
-        return res.status(200).json(response)
+    createDepartment = async(req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { name, companyId } = req.body;
+            const response = await this.caseUse.createDepartment({ name, companyId })
+            return res.status(200).json(response)
+        } catch (error) {
+            next(error);
+        }
     }
 
-    getDepartmentById = async(req: Request, res: Response) =>{
-        const { id } = req.params;
-        const response = await this.caseUse.getDepartmentsById({ id })
-        return res.status(200).json(response)
+    getDepartmentById = async(req: Request, res: Response, next: NextFunction) =>{
+        try { 
+            const { id } = req.params;
+            const response = await this.caseUse.getDepartmentsById({ id })
+            return res.status(200).json(response)
+        } catch (error) {
+            next(error);
+        }
     }
 
-    updateDepartment = async(req: Request, res: Response) =>{
+    updateDepartment = async(req: Request, res: Response, next: NextFunction) => {
         const { id } = req.params
         const { name, companyId } = req.body
-        const response = await this.caseUse.updateDepartment({ id, name, companyId })
-        return res.status(200).json(response)
-    }
+        try {
+            const response = await this.caseUse.updateDepartment({ id, name, companyId });
+            return res.status(200).json(response);
+        } catch (error) {
+            next(error);
+        }
+    };
+    
 
-    deleteDepartment = async(req: Request, res: Response) => {
+    deleteDepartment = async(req: Request, res: Response, next: NextFunction) => {
         const { id } = req.params
-        const response = await this.caseUse.deleteDepartment({ id })
-        return res.status(200).json(response)
+        try {
+            const response = await this.caseUse.deleteDepartment({ id })
+            return res.status(200).json(response)
+        } catch (error) {
+            next(error);
+        }
     }
 
     getAllDepartments = async(req: Request, res: Response) => {
-        const response = await this.caseUse.listDepartments()
-        return res.status(200).json(response)
+        try {
+            const response = await this.caseUse.listDepartments();
+            return res.status(200).json(response);
+        } catch (error) {
+            return res.status(500).json({ error: "Erro interno do servidor" });
+        }
     }
 }

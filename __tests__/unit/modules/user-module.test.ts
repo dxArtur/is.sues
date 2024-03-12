@@ -1,9 +1,9 @@
 import { PrismaClient } from '@prisma/client'
 import { prisma } from '../../../src/server/database/repositoryClient'
 import {UserUseCase} from '../../../src/server/modules/users/userUseCases'
-import { UserDto } from '../../../src/dtos/UserDTO'
-import { CompanyDto } from '../../../src/dtos/CompanyDTO'
-import { DepartmentDto } from '../../../src/dtos/DepartmentDTO'
+import { UserDto } from '../../../src/server/dtos/UserDTO'
+import { CompanyDto } from '../../../src/server/dtos/CompanyDTO'
+import { DepartmentDto } from '../../../src/server/dtos/DepartmentDTO'
 
 jest.mock('../../../src/server/database/repositoryClient')
 
