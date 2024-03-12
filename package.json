@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start":"ts-node-dev --inspect --transpile-only --ignore-watch node_modules  dist/src/server/index.js",
     "dev": "ts-node-dev --inspect --transpile-only --ignore-watch node_modules src/server/index.ts",
-    "test": "jest"
+    "test": "jest",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
