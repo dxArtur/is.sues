@@ -1,0 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const department_controller_1 = require("../controllers/department-controller");
+const departmenstUseCase_1 = require("../modules/departments/departmenstUseCase");
+const verifyTokenAuthenticantion_1 = require("../middlewares/verifyTokenAuthenticantion");
+const router = (0, express_1.Router)();
+const departmenstUseCase = new departmenstUseCase_1.DepartmentUseCase;
+const departmentController = new department_controller_1.DepartmentController(departmenstUseCase);
+router.post('/departments/new', verifyTokenAuthenticantion_1.verifyTokenAuthentication, verifyTokenAuthenticantion_1.verifyAdminAuth, departmentController.createDepartment);
+router.get('/departments/all', verifyTokenAuthenticantion_1.verifyTokenAuthentication, departmentController.getAllDepartments);
+router.get('/departments/:id', verifyTokenAuthenticantion_1.verifyTokenAuthentication, departmentController.getDepartmentById);
+router.put('/departments/:id', verifyTokenAuthenticantion_1.verifyTokenAuthentication, verifyTokenAuthenticantion_1.verifyAdminAuth, departmentController.updateDepartment);
+router.delete('/departments/:id', verifyTokenAuthenticantion_1.verifyTokenAuthentication, verifyTokenAuthenticantion_1.verifyAdminAuth, departmentController.deleteDepartment);
+exports.default = router;
