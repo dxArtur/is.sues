@@ -8,7 +8,7 @@ import cookieParser from 'cookie-parser'
 
 dotenv.config()
 const app = express()
-
+const PORT = process.env.PORT || 3030;
 
 app.use(cors())
 app.use(express.json())
@@ -27,6 +27,8 @@ app.use(session({
 
 app.use('/api', routes);
 
-app.listen(process.env.PORT, () =>{
-  console.log('server is running')
-})
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
+});
+
+export default app;

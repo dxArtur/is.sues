@@ -1,0 +1,16 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const company_controller_1 = require("../controllers/company-controller");
+const companyUseCase_1 = require("../modules/company/companyUseCase");
+const verifyTokenAuthenticantion_1 = require("../middlewares/verifyTokenAuthenticantion");
+const router = (0, express_1.Router)();
+const companyUseCase = new companyUseCase_1.CompanyUseCase;
+const companyController = new company_controller_1.CompanyController(companyUseCase);
+router.post('/company/new', companyController.createCompany);
+router.get('/company/all', companyController.getAllCompanies);
+router.delete('/company/all', verifyTokenAuthenticantion_1.verifyTokenAuthentication, verifyTokenAuthenticantion_1.verifyAdminAuth, companyController.deleteAllCompanies);
+router.get('/company/:id', companyController.getCompanyById);
+router.put('/company/:id', verifyTokenAuthenticantion_1.verifyTokenAuthentication, verifyTokenAuthenticantion_1.verifyAdminAuth, companyController.updateCompany);
+router.delete('/company/:id', verifyTokenAuthenticantion_1.verifyTokenAuthentication, verifyTokenAuthenticantion_1.verifyAdminAuth, companyController.deleteCompany);
+exports.default = router;
