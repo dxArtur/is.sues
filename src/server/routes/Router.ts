@@ -10,10 +10,13 @@ import { errorHandler } from "../middlewares/errorHandler"
 const router = Router()
 
 router.use('/', companyRoutes, errorHandler)
-router.use('/', userRouter)
+router.use('/users', userRouter);
 router.use('/', issueRouter, errorHandler)
 router.use('/', departamentRoutes, errorHandler)
 router.use('/', labelRoutes, errorHandler)
 router.use('/', authRoutes)
 
-export default router
+// Middleware de tratamento de erros deve ser registrado após as rotas
+router.use(errorHandler);
+
+export default router;
