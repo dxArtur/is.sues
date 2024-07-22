@@ -10,7 +10,8 @@
     "start": "node dist/server/index.js",
     "dev": "ts-node-dev --inspect --transpile-only --ignore-watch node_modules src/server/index.ts",
     "test": "jest",
-    "build": "tsc"
+    "build": "tsc",
+    "vercel-build": "npm run build && npx prisma generate --schema=src/prisma/schema.prisma && npx prisma migrate deploy --schema=src/prisma/schema.prisma"
   },
   "keywords": [],
   "author": "",

@@ -10,6 +10,7 @@ const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const express_session_1 = __importDefault(require("express-session"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const errorHandler_1 = require("./middlewares/errorHandler");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3030;
@@ -25,6 +26,8 @@ app.use((0, express_session_1.default)({
     cookie: { maxAge: 7 * 24 * 60 * 60 * 1000 }
 }));
 app.use('/api', Router_1.default);
+// Middleware de tratamento de erros
+app.use(errorHandler_1.errorHandler);
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });

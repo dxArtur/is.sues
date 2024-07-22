@@ -30,6 +30,7 @@ class UserController {
                         }))
                     });
                 }
+                console.log(error);
                 return res.status(500).json({ error: "Erro interno do servidor" });
             }
         });
@@ -122,6 +123,7 @@ class UserController {
                         }))
                     });
                 }
+                console.log(error);
                 return res.status(500).json({ error: "Erro interno do servidor" });
             }
         });
