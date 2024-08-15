@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 import { UserDto } from "../../dtos/UserDTO";
-import { prisma } from "../../database/repositoryClient"
 import utilsCrypt from '../../utils/crypt'
 import { sign } from 'jsonwebtoken';
 import path from 'path';
