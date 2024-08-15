@@ -10,7 +10,8 @@
     "start": "ts-node-dev --inspect --transpile-only --ignore-watch node_modules src/server/index.ts",
     "dev": "ts-node-dev --inspect --transpile-only --ignore-watch node_modules src/server/index.ts",
     "test": "jest",
-    "build": "tsc"
+    "build": "tsc",
+    "vercel-build":"npx prisma migrate deploy"
   },
   "keywords": [],
   "author": "",
