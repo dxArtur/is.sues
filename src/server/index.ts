@@ -24,6 +24,7 @@ app.use(session({
   cookie: { maxAge: 7 * 24 * 60 * 60 * 1000 }
 }));
 
+// Suas rotas principais
 app.use('/api', routes);
 
 // Middleware de tratamento de erros
@@ -31,6 +32,7 @@ app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
+  console.log(`Documentação disponível em http://localhost:${PORT}/api/api-docs`);
 });
 
 export default app;

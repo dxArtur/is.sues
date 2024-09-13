@@ -38,7 +38,7 @@ export class UserUseCase{
       },
       process.env.SECRET!,
       {
-        expiresIn: '1h',
+        expiresIn: '20h',
         algorithm: 'HS256',
         subject: userAttempAuth.id,
       }

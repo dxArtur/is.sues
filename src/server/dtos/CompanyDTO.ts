@@ -6,6 +6,7 @@ export interface CompanyDto {
     latitude?: number;
     longitude?: number;
     description?: string|null;
+    headid?: string|null;
     departments?: String[];
 }
 
@@ -17,6 +18,7 @@ export interface UpdateCompanyDto {
     latitude?: number;
     longitude?: number;
     description?: string | null; // Opcional
+    headid?: string|null;
     departments?: string[];      // Opcional
 }
 

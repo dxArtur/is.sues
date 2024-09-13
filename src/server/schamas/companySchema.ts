@@ -7,6 +7,7 @@ export const createCompanySchema = z.object({
   description: z.string().optional(),
   latitude: z.number().min(-90).max(90).optional(),
   longitude: z.number().min(-180).max(180).optional(),
+  headid: z.string().optional(),
   departments: z.array(z.string()).optional(),
 });
 
@@ -18,6 +19,7 @@ export const updateCompanySchema = z.object({
   description: z.string().optional(),
   latitude: z.number().min(-90).max(90).optional(),
   longitude: z.number().min(-180).max(180).optional(),
+  headid: z.string().optional(),
   departments: z.array(z.string()).optional(),
 });
 

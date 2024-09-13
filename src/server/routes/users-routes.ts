@@ -8,22 +8,237 @@ const router = Router();
 const userUseCase = new UserUseCase(prisma);
 const userController = new UserController(userUseCase);
 
-// Rota para criar um novo usu�rio
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     SignUpUser:
+ *       type: object
+ *       required:
+ *         - name
+ *         - email
+ *         - password
+ *         - occupation
+ *         - adm
+ *       properties:
+ *         name:
+ *           type: string
+ *           description: Nome do usuário
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: E-mail do usuário
+ *         password:
+ *           type: string
+ *           description: Senha do usuário
+ *         occupation:
+ *           type: string
+ *           description: Ocupação do usuário
+ *         adm:
+ *           type: boolean
+ *           description: Indica se o usuário é administrador
+ *         photo:
+ *           type: string
+ *           description: Foto do usuário (opcional)
+ *         departmentId:
+ *           type: string
+ *           description: ID do departamento (opcional)
+ *       example:
+ *         name: "João Silva"
+ *         email: "joao@example.com"
+ *         password: "senha123"
+ *         occupation: "Developer"
+ *         adm: true
+ *         photo: "link_para_foto"
+ *         departmentId: "dept123"
+ * 
+ *     UpdateUser:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *           description: Nome do usuário (opcional)
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: E-mail do usuário (opcional)
+ *         password:
+ *           type: string
+ *           description: Senha do usuário (mínimo 6 caracteres, opcional)
+ *         occupation:
+ *           type: string
+ *           description: Ocupação do usuário (opcional)
+ *         adm:
+ *           type: boolean
+ *           description: Indica se o usuário é administrador (opcional)
+ *         photo:
+ *           type: string
+ *           description: Foto do usuário (opcional)
+ *         departmentId:
+ *           type: string
+ *           description: ID do departamento (opcional)
+ *       example:
+ *         name: "Maria Silva"
+ *         email: "maria@example.com"
+ *         occupation: "Manager"
+ *         adm: false
+ * 
+ *     SignInUser:
+ *       type: object
+ *       required:
+ *         - email
+ *         - password
+ *       properties:
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: E-mail do usuário
+ *         password:
+ *           type: string
+ *           description: Senha do usuário (mínimo 6 caracteres)
+ *       example:
+ *         email: "joao@example.com"
+ *         password: "senha123"
+ */
+
+/**
+ * @swagger
+ * /users:
+ *   post:
+ *     summary: Cria um novo usuário
+ *     tags: [Usuários]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/SignUpUser'
+ *     responses:
+ *       201:
+ *         description: Usuário criado com sucesso
+ */
 router.post('/', userController.signup);
 
-// Rota para listar todos os usu�rios
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     summary: Lista todos os usuários
+ *     tags: [Usuários]
+ *     responses:
+ *       200:
+ *         description: Lista de usuários retornada com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/SignUpUser'
+ */
 router.get('/', userController.listUsers);
 
-// Rota para buscar um usu�rio por ID
+/**
+ * @swagger
+ * /users/{id}:
+ *   get:
+ *     summary: Busca um usuário por ID
+ *     tags: [Usuários]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID do usuário
+ *     responses:
+ *       200:
+ *         description: Usuário encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SignUpUser'
+ *       404:
+ *         description: Usuário não encontrado
+ */
 router.get('/:id', userController.getUserById);
 
-// Rota para atualizar um usu�rio por ID
+/**
+ * @swagger
+ * /users/{id}:
+ *   put:
+ *     summary: Atualiza um usuário por ID
+ *     tags: [Usuários]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID do usuário
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateUser'
+ *     responses:
+ *       200:
+ *         description: Usuário atualizado com sucesso
+ *       404:
+ *         description: Usuário não encontrado
+ */
 router.put('/:id', userController.updateUserById);
 
-// Rota para excluir um usu�rio por ID
+/**
+ * @swagger
+ * /users/{id}:
+ *   delete:
+ *     summary: Exclui um usuário por ID
+ *     tags: [Usuários]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID do usuário
+ *     responses:
+ *       204:
+ *         description: Usuário excluído com sucesso
+ *       404:
+ *         description: Usuário não encontrado
+ */
 router.delete('/:id', userController.deleteUserById);
 
-// Rota para adicionar foto ao perfil do usu�rio por ID
+/**
+ * @swagger
+ * /users/{id}/profile-picture:
+ *   post:
+ *     summary: Adiciona uma foto de perfil para o usuário
+ *     tags: [Usuários]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID do usuário
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               profilePicture:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Foto de perfil atualizada com sucesso
+ *       404:
+ *         description: Usuário não encontrado
+ */
 router.post('/:id/profile-picture', upload.single('profilePicture'), userController.updateProfilePicture);
 
 export default router;

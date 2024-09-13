@@ -5,6 +5,7 @@ interface Company {
     name: string;
     email: String;
     description?: string;
+    headid?: string;
     departments: Department[]
   }
   

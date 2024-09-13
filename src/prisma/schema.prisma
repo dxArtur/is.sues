@@ -58,6 +58,7 @@ model Company {
   latitude  Float?
   longitude Float?
   description String?
+  headid String?
   departments Department[]
   @@map("companies")
 }

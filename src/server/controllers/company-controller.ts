@@ -10,8 +10,8 @@ export class CompanyController {
     }
     createCompany = async(req: Request, res: Response, next: NextFunction) =>{
         try {
-            const { name, email, password, latitude, longitude, description, departments } = req.body;
-            const response = await this.caseUse.createCompany({ name, email, password, latitude, longitude, description, departments })
+            const { name, email, password, latitude, longitude, description, headid, departments } = req.body;
+            const response = await this.caseUse.createCompany({ name, email, password, latitude, longitude, description, headid, departments })
             return res.status(200).json(response)
         } catch (error) {
             next(error); // Passa o erro para o próximo middleware (errorHandler)
@@ -26,8 +26,8 @@ export class CompanyController {
     updateCompany = async(req: Request, res: Response, next: NextFunction) => {
         try {
             const { id } = req.params;
-            const { name, email, password, description, departments } = req.body;
-            const response = await this.caseUse.updateCompany({id, name, email, password, description, departments})
+            const { name, email, password, description,headid, departments } = req.body;
+            const response = await this.caseUse.updateCompany({id, name, email, password, description,headid, departments})
             return res.status(200).json(response)
         } catch (error) {
             next(error); // Passa o erro para o próximo middleware (errorHandler)
