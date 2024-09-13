@@ -1,22 +1,24 @@
 import multer from 'multer';
-import path from 'path';
+import { Request } from 'express'; // Importando Request de express
+
 
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
+    destination: function (req: Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) {
         cb(null, 'src/server/modules/uploads/');
     },
-    filename: (req, file, cb) => {
+    filename: function (req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) {
         cb(null, new Date().toISOString().replace(/:/g, '-') + file.originalname);
     }
 });
 
-const fileFilter = (req: any, file: any, cb: any) => {
+const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
         cb(null, true);
     } else {
-        cb(null, false);
+        cb(null, false)
     }
 };
+
 
 export const upload = multer({
     storage: storage,

@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
 }
 
 model User {
@@ -58,6 +58,7 @@ model Company {
   latitude  Float?
   longitude Float?
   description String?
+  headid String?
   departments Department[]
   @@map("companies")
 }

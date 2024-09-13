@@ -20,6 +20,7 @@ export class CompanyUseCase {
                     latitude: validatedData.latitude,
                     longitude: validatedData.longitude,
                     description: validatedData.description,
+                    headid: validatedData.headid,
                 }
             });
     
@@ -65,6 +66,7 @@ export class CompanyUseCase {
                     ...(validatedData.departments && { departments: { connect: validatedData.departments.map(depId => ({ id: depId })) } }),
                     ...(validatedData.latitude != null && { latitude: validatedData.latitude }),
                     ...(validatedData.longitude != null && { longitude: validatedData.longitude }),
+                    ...(validatedData.headid && { headid: validatedData.headid }),
                 },
             });
     
