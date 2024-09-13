@@ -1,4 +1,4 @@
-export interface UserDto {
+export interface UsersDto {
     id?: string;
     name: string;
     email: string;
@@ -7,5 +7,5 @@ export interface UserDto {
     adm: boolean;
     photo?: string;
     departmentId?: string;
-    issues?: String[];
+    issues?: string[];
   }

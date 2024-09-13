@@ -6,6 +6,9 @@
   "engines": {
     "node": "20.x"
   },
+  "prisma": {
+    "schema": "./src/prisma/schema.prisma"
+  },
   "scripts": {
   "start": "node dist/server/index.js",
   "dev": "ts-node-dev --inspect --transpile-only --ignore-watch node_modules src/server/index.ts",
