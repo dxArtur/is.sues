@@ -11,9 +11,8 @@
   "dev": "ts-node-dev --inspect --transpile-only --ignore-watch node_modules src/server/index.ts",
   "test": "jest",
   "build": "tsc",
-  "prisma:generate": "npx prisma generate --schema=src/prisma/schema.prisma",
-  "prisma:migrate": "npx prisma migrate deploy --schema=src/prisma/schema.prisma",
-  "vercel-build": "npm run build && npm run prisma:generate && npm run prisma:migrate"
+   "vercel-build": "npx prisma generate --schema=src/prisma/schema.prisma && npx prisma migrate deploy --schema=src/prisma/schema.prisma && npm run build",
+  "prisma:generate": "prisma generate --schema=src/prisma/schema.prisma"
   },
   "keywords": [],
   "author": "",

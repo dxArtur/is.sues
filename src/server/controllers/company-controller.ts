@@ -49,5 +49,23 @@ export class CompanyController {
         const response = await this.caseUse.deleteAllCompanies();
         return res.status(200).json(response);
     }
+    getCompanyByHeadId= async(req: Request, res: Response) => {
+        const { headId } = req.params;
+    
+        console.log('Buscando empresa com headid:', headId);
+    
+        try {
+          const company = await this.caseUse.findByHeadId(headId);
+    
+          if (!company) {
+            return res.status(404).json({ error: 'Empresa não encontrada' });
+          }
+    
+          return res.json(company);
+        } catch (error) {
+          console.error('Erro ao buscar empresa:', error);
+          return res.status(500).json({ error: 'Erro ao buscar empresa' });
+        }
+    }
     
 }
