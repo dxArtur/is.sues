@@ -56,11 +56,13 @@ export class IssueUseCase{
         const updatedIssue = await prisma.issue.update({
             where: { id: validatedData.id },
             data: {
-                ...(validatedData.title && { title: validatedData.title }),
-                ...(validatedData.description && { description: validatedData.description }),
-                ...(validatedData.status && { status: validatedData.status }),
-                ...(validatedData.departmentId && { department: { connect: { id: validatedData.departmentId } } }),
-                ...(validatedData.authorId && { author: { connect: { id: validatedData.authorId } } })
+                ...(validatedData.title !== undefined && { title: validatedData.title }),
+                ...(validatedData.description !== undefined && { description: validatedData.description }),
+                ...(validatedData.status !== undefined && { status: validatedData.status }),
+                ...(validatedData.isAssigned !== undefined && { isAssigned: validatedData.isAssigned }),
+                ...(validatedData.departmentId !== undefined && { department: { connect: { id: validatedData.departmentId } } }),
+                ...(validatedData.authorId !== undefined && { author: { connect: { id: validatedData.authorId } } }),
+                ...(validatedData.assignedUserId !== undefined && { assignedUser: { connect: { id: validatedData.assignedUserId } } })
             }
         });
 

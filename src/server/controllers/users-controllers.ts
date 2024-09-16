@@ -31,6 +31,26 @@ export class UserController {
     }
   };
 
+  getUserIssues = async (req: Request, res: Response): Promise<Response> => {
+    try {
+      const { id } = req.params;
+      const response = await this.caseUse.getUserIssues(id);
+      return res.status(200).json(response);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return res.status(400).json({
+          error: "Dados de entrada inválidos",
+          validationErrors: error.errors.map(e => ({
+            path: e.path.join('.'),
+            message: e.message
+          }))
+        });
+      }
+      console.log(error);
+      return res.status(500).json({ error: "Erro interno do servidor" });
+    }
+  };
+
   listUsers= async(req: Request, res: Response):Promise<Response> =>{
     const response = await this.caseUse.listUsers()
     return res.status(200).json(response)

@@ -241,4 +241,36 @@ router.delete('/:id', userController.deleteUserById);
  */
 router.post('/:id/profile-picture', upload.single('profilePicture'), userController.updateProfilePicture);
 
+/**
+ * @swagger
+* /users/{id}/issues:
+*  get:
+*    summary: "Obtém todas as issues criadas por um usuário"
+*    description: "Retorna uma lista de issues criadas por um usuário específico identificado por seu ID."
+*    tags:
+*      - Users
+*    parameters:
+*      - in: path
+*        name: id
+*        required: true
+*        schema:
+*          type: string
+*        description: "ID do usuário"
+*    responses:
+*      200:
+*        description: "Lista de issues do usuário"
+*        content:
+*          application/json:
+*            schema:
+*              type: array
+*              items:
+*                $ref: '#/components/schemas/Issue'
+*      404:
+*        description: "Nenhuma issue encontrada para este usuário"
+*      500:
+*        description: "Erro interno do servidor"
+*
+*/
+router.get('/:id/issues', userController.getUserIssues);
+
 export default router;

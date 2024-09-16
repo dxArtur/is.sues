@@ -73,7 +73,25 @@ export class UserUseCase{
     });
   
     return newUser;
-  }  
+  } 
+  
+  async getUserIssues(userId: string) {
+    if (!userId) {
+      throw new Error("ID de usuário não fornecido");
+    }
+
+    // Busca as issues associadas ao usuário no Prisma
+    const userIssues = await prisma.issue.findMany({
+      where: { authorId: userId },
+      include: { department: true },
+    });
+
+    if (userIssues.length === 0) {
+      throw new Error('Nenhuma issue encontrada para este usuário');
+    }
+
+    return userIssues;
+  }
 
   async listUsers() {
     const allUsers = await this.repository.user.findMany({})
