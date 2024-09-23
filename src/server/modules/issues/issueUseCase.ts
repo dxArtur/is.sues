@@ -62,7 +62,11 @@ export class IssueUseCase{
                 ...(validatedData.isAssigned !== undefined && { isAssigned: validatedData.isAssigned }),
                 ...(validatedData.departmentId !== undefined && { department: { connect: { id: validatedData.departmentId } } }),
                 ...(validatedData.authorId !== undefined && { author: { connect: { id: validatedData.authorId } } }),
-                ...(validatedData.assignedUserId !== undefined && { assignedUser: { connect: { id: validatedData.assignedUserId } } })
+                ...(validatedData.assignedUserId !== undefined && 
+                    (validatedData.assignedUserId === null 
+                      ? { assignedUser: { disconnect: true } } // Desconecta o usuário atribuído
+                      : { assignedUser: { connect: { id: validatedData.assignedUserId } } } // Conecta o novo usuário
+                    )),
             }
         });
 

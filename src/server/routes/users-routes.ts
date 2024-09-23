@@ -2,7 +2,8 @@ import { Router } from 'express';
 import { UserController } from '../controllers/users-controllers'; 
 import { UserUseCase } from '../modules/users/userUseCases';
 import { prisma } from '../database/repositoryClient';
-import { upload } from '../middlewares/multerPhoto';
+import multer from 'multer';
+//import { upload } from '../middlewares/multerPhoto';
 
 const router = Router();
 const userUseCase = new UserUseCase(prisma);
@@ -239,6 +240,8 @@ router.delete('/:id', userController.deleteUserById);
  *       404:
  *         description: Usuário não encontrado
  */
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 router.post('/:id/profile-picture', upload.single('profilePicture'), userController.updateProfilePicture);
 
 /**
@@ -272,5 +275,33 @@ router.post('/:id/profile-picture', upload.single('profilePicture'), userControl
 *
 */
 router.get('/:id/issues', userController.getUserIssues);
+/*
+*paths:
+*  /users/{userId}/assigned-issues:
+*    get:
+*      summary: "Obter issues atribuídas ao usuário"
+*      description: "Busca todas as issues atribuídas ao usuário pelo ID."
+*      parameters:
+*        - name: userId
+*          in: path
+*          required: true
+*          schema:
+*            type: string
+*          description: ID do usuário
+*      responses:
+*        '200':
+*          description: "Lista de issues atribuídas"
+*          content:
+*            application/json:
+*              schema:
+*                type: array
+*                items:
+*                  $ref: '#/components/schemas/Issue'
+*        '404':
+*          description: "Usuário não encontrado"
+*        '500':
+*          description: "Erro no servidor"
+*/
+router.get('/:userId/assigned-issues', userController.getAssignedIssues);
 
 export default router;

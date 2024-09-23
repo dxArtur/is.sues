@@ -15,7 +15,7 @@ export const updateCompanySchema = z.object({
   id: z.string().uuid('ID inválido'),
   name: z.string().optional(),
   email: z.string().email('Email inválido').optional(),
-  password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres'),
+  password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres').optional(),
   description: z.string().optional(),
   latitude: z.number().min(-90).max(90).optional(),
   longitude: z.number().min(-180).max(180).optional(),
