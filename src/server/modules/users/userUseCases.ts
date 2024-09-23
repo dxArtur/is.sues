@@ -4,6 +4,7 @@ import utilsCrypt from '../../utils/crypt'
 import { sign } from 'jsonwebtoken';
 import path from 'path';
 import fs from 'fs';
+import { prisma } from "../../database/repositoryClient";
 
 export class UserUseCase{
   private repository: PrismaClient
@@ -72,7 +73,25 @@ export class UserUseCase{
     });
   
     return newUser;
-  }  
+  } 
+  
+  async getUserIssues(userId: string) {
+    if (!userId) {
+      throw new Error("ID de usuário não fornecido");
+    }
+
+    // Busca as issues associadas ao usuário no Prisma
+    const userIssues = await prisma.issue.findMany({
+      where: { authorId: userId },
+      include: { department: true },
+    });
+
+    if (userIssues.length === 0) {
+      throw new Error('Nenhuma issue encontrada para este usuário');
+    }
+
+    return userIssues;
+  }
 
   async listUsers() {
     const allUsers = await this.repository.user.findMany({})
@@ -98,21 +117,26 @@ export class UserUseCase{
   }
 
   async updateUser({ id, name, email, password, departmentId, occupation, adm, photo }: UsersDto) {
-    const hashedPassword = await utilsCrypt.cryptPass(password);
-  
+    const dataToUpdate: any = {
+      name,
+      email,
+      departmentId,
+      occupation,
+      adm,
+      photo,
+    };
+
+    // Hash the password only if it's provided
+    if (password) {
+      dataToUpdate.password = await utilsCrypt.cryptPass(password);
+    }
+
+    // Perform the update
     const updatedUser = await this.repository.user.update({
       where: {
-        id: id,
+        id,
       },
-      data: {
-        name,
-        email,
-        password: hashedPassword,
-        departmentId,
-        occupation,
-        adm,
-        photo,
-      },
+      data: dataToUpdate,
     });
   
     if (!updatedUser) {
@@ -147,8 +171,21 @@ export class UserUseCase{
     return userAttempDeleted;
   }
 
+  async updateProfilePicture({ id }: { id: string }, imageUrl: string) {
+    try {
+      // Atualiza o registro do usuário no banco de dados com a nova URL da imagem
+      const updatedUser = await prisma.user.update({
+        where: { id },
+        data: { photo: imageUrl }, // Salva a URL da imagem no campo 'photo'
+      });
 
-  async updateProfilePicture({id}: {id: string}, file: Express.Multer.File) {
+      return updatedUser;
+    } catch (error) {
+      console.error('Erro ao atualizar a imagem do perfil no banco de dados:', error);
+      throw new Error('Erro ao atualizar o usuário no banco de dados.');
+    }
+  }
+  /*async updateProfilePicture({id}: {id: string}, file: Express.Multer.File) {
     if (!file) {
         throw new Error('Nenhum arquivo foi enviado.');
     }
@@ -163,6 +200,20 @@ export class UserUseCase{
     });
 
     return updatedUser;
+  }*/
+  async getAssignedIssues(userId: string) {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        assignedIssues: true,
+      },
+    });
+
+    if (!user) {
+      throw new Error('Usuário não encontrado');
+    }
+
+    return user.assignedIssues;
   }
 
 }

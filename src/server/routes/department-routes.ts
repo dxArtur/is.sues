@@ -185,4 +185,6 @@ router.put('/departments/:id', verifyTokenAuthentication, verifyAdminAuth, depar
  */
 router.delete('/departments/:id', verifyTokenAuthentication, verifyAdminAuth, departmentController.deleteDepartment);
 
+router.get('/departments/:departmentId/users', departmentController.getUsersFromDepartment);
+
 export default router;

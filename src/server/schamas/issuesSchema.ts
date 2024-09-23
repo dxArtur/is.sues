@@ -16,6 +16,8 @@ export const createIssueSchema = z.object({
     title: z.string().optional(),
     description: z.string().optional(),
     status: z.boolean().optional(),
+    isAssigned: z.boolean().optional(),
     departmentId: z.string().uuid().optional(),
     authorId: z.string().uuid().optional(),
+    assignedUserId: z.string().uuid().nullable().optional(),
   });

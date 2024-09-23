@@ -56,6 +56,9 @@ const issueController = new IssuesController(issueUseCase)
  *         status:
  *           type: boolean
  *           description: Status da issue (opcional)
+ *         isAssigned:
+ *           type: boolean
+ *           description: isAssigned da issue (opcional)
  *         departmentId:
  *           type: string
  *           format: uuid
@@ -69,6 +72,7 @@ const issueController = new IssuesController(issueUseCase)
  *         title: "Falha resolvida"
  *         description: "O problema com o dashboard foi corrigido"
  *         status: true
+ *         isAssigned: true
  *         departmentId: "d123e4567-e89b-12d3-a456-426614174000"
  *         authorId: "a123e4567-e89b-12d3-a456-426614174000"
  */

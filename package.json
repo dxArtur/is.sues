@@ -10,13 +10,12 @@
     "schema": "./src/prisma/schema.prisma"
   },
   "scripts": {
-  "start": "node dist/server/index.js",
-  "dev": "ts-node-dev --inspect --transpile-only --ignore-watch node_modules src/server/index.ts",
-  "test": "jest",
-  "build": "tsc",
-  "prisma:generate": "npx prisma generate --schema=src/prisma/schema.prisma",
-  "prisma:migrate": "npx prisma migrate deploy --schema=src/prisma/schema.prisma",
-  "vercel-build": "npm run build && npm run prisma:generate && npm run prisma:migrate"
+    "start": "node dist/server/index.js",
+    "dev": "ts-node-dev --inspect --transpile-only --ignore-watch node_modules src/server/index.ts",
+    "test": "jest",
+    "build": "tsc",
+    "vercel-build": "npx prisma generate --schema=src/prisma/schema.prisma && npx prisma migrate deploy --schema=src/prisma/schema.prisma && npm run build",
+    "prisma:generate": "prisma generate --schema=src/prisma/schema.prisma"
   },
   "keywords": [],
   "author": "",
@@ -26,6 +25,7 @@
     "@types/cookie-parser": "^1.4.6",
     "@types/express-session": "^1.17.10",
     "bcrypt": "^5.1.1",
+    "cloudinary": "^2.5.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",

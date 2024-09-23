@@ -201,4 +201,34 @@ router.put('/company/:id', verifyTokenAuthentication, verifyAdminAuth, companyCo
  */
 router.delete('/company/:id', verifyTokenAuthentication, verifyAdminAuth, companyController.deleteCompany);
 
+/**
+ * @swagger
+ * /company/head/{headId}:
+ *   get:
+ *     summary: Busca a empresa por headId (ID do usuário que é dono da empresa)
+ *     description: Retorna a empresa associada ao usuário que é o headid.
+ *     tags:
+ *       - Empresas
+ *     parameters:
+ *       - name: headId
+ *         in: path
+ *         required: true
+ *         description: ID do usuário que é o dono da empresa (headid)
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Empresa encontrada
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Company'
+ *       404:
+ *         description: Empresa não encontrada
+ *       500:
+ *         description: Erro interno do servidor
+ */
+router.get('/company/head/:headId', companyController.getCompanyByHeadId);
+
+
 export default router;

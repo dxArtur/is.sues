@@ -5,6 +5,7 @@ export interface IssueDto {
     createdAt: Date;
     updatedAt: Date;
     status: boolean;
+    isAssigned: boolean;
     authorId: string;
     departmentId: string;
   }
@@ -21,8 +22,10 @@ export interface UpdateIssueDto {
   title?: string;          
   description?: string;   
   status?: Boolean;
+  isAssigned?: Boolean;
   departmentId?: string;    
-  authorId?: string;      
+  authorId?: string; 
+  assignedUserId?: string;     
 }
 
 

@@ -14,15 +14,17 @@ model User {
   id           String      @id @default(uuid())
   name         String
   email        String      @unique
-  password String
-  occupation String
-  adm Boolean
-  photo String?
+  password     String
+  occupation   String
+  adm          Boolean
+  photo        String?
   departmentId String?
   department   Department? @relation(fields: [departmentId], references: [id])
-  issues       Issue[]
+  issues       Issue[]     @relation("AuthorOfIssue") // Issues criadas pelo usuário
+  assignedIssues Issue[]   @relation("AssignedToIssue") // Issues atribuídas ao usuário
   @@map("users")
 }
+
 
 model Issue {
   id String @id @default(uuid())
@@ -31,8 +33,11 @@ model Issue {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   status Boolean @default(false)
-  author User @relation(fields: [authorId], references: [id])
-  authorId String
+  isAssigned Boolean @default(false)
+  author        User      @relation("AuthorOfIssue", fields: [authorId], references: [id])
+  authorId      String
+  assignedUser  User?     @relation("AssignedToIssue", fields: [assignedUserId], references: [id])
+  assignedUserId String?
   department   Department @relation(fields: [departmentId], references: [id])
   departmentId String
   @@map("issues")

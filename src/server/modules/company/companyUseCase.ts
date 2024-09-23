@@ -111,4 +111,18 @@ export class CompanyUseCase {
             throw new Error("Erro ao deletar empresas.");
         } 
     }
+    async findByHeadId(headId: string) {
+        try {
+          const company = await prisma.company.findFirst({
+            where: {
+              headid: headId,
+            },
+          });
+    
+          return company;
+        } catch (error) {
+          console.error('Erro ao buscar empresa por headid:', error);
+          throw new Error('Erro ao buscar empresa');
+        }
+    }
 }

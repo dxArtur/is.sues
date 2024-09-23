@@ -32,8 +32,8 @@ export class IssuesController {
     updateIssue = async(req: Request, res: Response, next: NextFunction) => {
         try {
             const { id } = req.params
-            const {title, description, status, departmentId, authorId} = req.body
-            const response = await this.useCase.updateIssue({ id, title, description,status, departmentId, authorId})
+            const {title, description, status, isAssigned, departmentId, authorId, assignedUserId} = req.body
+            const response = await this.useCase.updateIssue({ id, title, description, status, isAssigned, departmentId, authorId, assignedUserId})
             return res.status(200).json(response)
         } catch (error) {
             next(error);

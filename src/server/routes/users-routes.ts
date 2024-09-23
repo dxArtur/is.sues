@@ -2,7 +2,8 @@ import { Router } from 'express';
 import { UserController } from '../controllers/users-controllers'; 
 import { UserUseCase } from '../modules/users/userUseCases';
 import { prisma } from '../database/repositoryClient';
-import { upload } from '../middlewares/multerPhoto';
+import multer from 'multer';
+//import { upload } from '../middlewares/multerPhoto';
 
 const router = Router();
 const userUseCase = new UserUseCase(prisma);
@@ -239,6 +240,68 @@ router.delete('/:id', userController.deleteUserById);
  *       404:
  *         description: Usuário não encontrado
  */
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 router.post('/:id/profile-picture', upload.single('profilePicture'), userController.updateProfilePicture);
+
+/**
+ * @swagger
+* /users/{id}/issues:
+*  get:
+*    summary: "Obtém todas as issues criadas por um usuário"
+*    description: "Retorna uma lista de issues criadas por um usuário específico identificado por seu ID."
+*    tags:
+*      - Users
+*    parameters:
+*      - in: path
+*        name: id
+*        required: true
+*        schema:
+*          type: string
+*        description: "ID do usuário"
+*    responses:
+*      200:
+*        description: "Lista de issues do usuário"
+*        content:
+*          application/json:
+*            schema:
+*              type: array
+*              items:
+*                $ref: '#/components/schemas/Issue'
+*      404:
+*        description: "Nenhuma issue encontrada para este usuário"
+*      500:
+*        description: "Erro interno do servidor"
+*
+*/
+router.get('/:id/issues', userController.getUserIssues);
+/*
+*paths:
+*  /users/{userId}/assigned-issues:
+*    get:
+*      summary: "Obter issues atribuídas ao usuário"
+*      description: "Busca todas as issues atribuídas ao usuário pelo ID."
+*      parameters:
+*        - name: userId
+*          in: path
+*          required: true
+*          schema:
+*            type: string
+*          description: ID do usuário
+*      responses:
+*        '200':
+*          description: "Lista de issues atribuídas"
+*          content:
+*            application/json:
+*              schema:
+*                type: array
+*                items:
+*                  $ref: '#/components/schemas/Issue'
+*        '404':
+*          description: "Usuário não encontrado"
+*        '500':
+*          description: "Erro no servidor"
+*/
+router.get('/:userId/assigned-issues', userController.getAssignedIssues);
 
 export default router;

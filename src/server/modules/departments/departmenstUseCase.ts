@@ -32,6 +32,9 @@ export class DepartmentUseCase{
             const validatedData = departmentIdSchema.parse({ id });
             const department = await prisma.department.findUnique({
                 where: { id: validatedData.id },
+                include: {
+                    users: true, // Incluir os usuários relacionados ao departamento
+                },
             });
     
             if (!department) {
@@ -87,10 +90,35 @@ export class DepartmentUseCase{
     
     async listDepartments() {
         try {
-            const allDepartments = await prisma.department.findMany({});
+            const allDepartments = await prisma.department.findMany({
+                include: {
+                    users: true, // Incluir os usuários relacionados ao departamento
+                  },
+            });
             return allDepartments;
         } catch (error) {
             throw new Error("Erro ao listar departamentos.");
         }
+    }
+    async getUsersFromDepartment(departmentId: string) {
+    try {
+        // Busca o departamento e carrega os usuários associados
+        const department = await prisma.department.findUnique({
+        where: { id: departmentId },
+        include: {
+            users: true, // Inclui os usuários relacionados
+        },
+        });
+
+        if (!department) {
+        throw new Error('Departamento não encontrado');
+        }
+
+        // Retorna a lista de usuários do departamento
+        return department.users;
+
+    } catch (error) {
+        throw new Error('Erro ao buscar usuários do departamento.');
+    }
     }
 }

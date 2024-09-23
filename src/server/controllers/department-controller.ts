@@ -59,4 +59,13 @@ export class DepartmentController {
             return res.status(500).json({ error: "Erro interno do servidor" });
         }
     }
+    getUsersFromDepartment = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { departmentId } = req.params; // Pega o ID do departamento da rota
+        const users = await this.caseUse.getUsersFromDepartment(departmentId); // Chama o use case
+        return res.status(200).json(users); // Retorna a lista de usuários
+    } catch (error) {
+        next(error); // Passa o erro para o middleware de erro
+    }
+    };
 }
