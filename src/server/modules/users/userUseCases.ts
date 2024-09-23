@@ -1,10 +1,10 @@
 import { PrismaClient } from "@prisma/client";
-import { UserDto } from "../../dtos/UserDTO";
-import { prisma } from "../../database/repositoryClient"
+import { UsersDto } from "../../dtos/UsersDTO";
 import utilsCrypt from '../../utils/crypt'
 import { sign } from 'jsonwebtoken';
 import path from 'path';
 import fs from 'fs';
+import { prisma } from "../../database/repositoryClient";
 
 export class UserUseCase{
   private repository: PrismaClient
@@ -48,7 +48,7 @@ export class UserUseCase{
   }  
 
   
-  async signup(userData: UserDto) {
+  async signup(userData: UsersDto) {
     const verifyExistUser = await this.repository.user.findFirst({
       where: {
         email: userData.email
@@ -116,7 +116,7 @@ export class UserUseCase{
     return user
   }
 
-  async updateUser({ id, name, email, password, departmentId, occupation, adm, photo }: UserDto) {
+  async updateUser({ id, name, email, password, departmentId, occupation, adm, photo }: UsersDto) {
     const dataToUpdate: any = {
       name,
       email,
